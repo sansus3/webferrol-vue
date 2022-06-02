@@ -12,36 +12,45 @@
                     <input required v-model.trim="form.password" type="password" id="password">
                 </li>
             </ul>
-            <button :disabled="validate">Enviar</button>
+            <input @click="byeBye" v-if="store.isLogged"  type="button" value="desconectar">
+            <button v-else :disabled="validate">Enviar</button>
         </form>
-        <a href="#" @click.prevent="byeBye">Desconectar</a>
+        <strong v-if="error">{{error.code}}{{error.message}}</strong>
+        
     </div>
 </template>
 
 <script setup>
 //Libraries
 import { useStoreUsers } from '@/stores/users';
-import { reactive,computed } from 'vue';
+import { ref,reactive,computed } from 'vue';
 //Cargamos store
 const store = useStoreUsers();
 //Variables
 const form = reactive({
-    email: '',
-    password:''
+    email: 'gonzaleztenreiro@gmail.com',
+    password:'Tq0xuxvBMs27042304()'
 });
+const error = ref(false);
 const validate = computed(()=>form.email==='' || form.password==='');
 const signIn = async () => {
     try {
+        error.value = false;
         await store.signIn(form);
-    } catch (error) {
-        console.log(error.code,'=>',error.message);
+    } catch (e) {
+        //Errores
+        //https://firebase.google.com/docs/auth/admin/errors?hl=es&authuser=0
+        //console.log(e.code,'=>',e.message);
+         error.value=e;
     }
 }
 const byeBye = async () => {
     try {
+        error.value = false;
         await store.loginOut();
-    } catch (error) {
-        console.log(error.code,'=>',error.message);
+    } catch (e) {
+        //console.log(e.code,'=>',e.message);
+        error.value=e;
     }
 }
 </script>
