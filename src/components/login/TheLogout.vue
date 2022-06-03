@@ -1,6 +1,6 @@
 <template>
     <a
-        class="button"
+        class="button is-light"
         href="#"
         v-if="store.isLogged" 
         @click.prevent="logOut">
@@ -26,6 +26,3 @@ const logOut = async () => {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

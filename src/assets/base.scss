@@ -1,1 +1,13 @@
-@import "../node_modules/bulma/bulma.sass";
+@import "../../node_modules/bulma/bulma.sass";
+
+//navbar
+.navbar{
+    a.router-link-exact-active {
+      background-color: $navbar-item-active-background-color;
+      color: $navbar-item-active-color;
+  }
+  
+  a.router-link-exact-active:hover {
+    background-color: $navbar-item-hover-background-color;
+  }
+}
