@@ -1,11 +1,14 @@
 <template>
-    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+    <nav 
+        class="navbar" 
+        :class="[logged ? 'is-dark' : 'is-info']"
+        role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <RouterLink
                 @click.prevent="isActive = false"
                 class="navbar-item" 
                 to="/">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> 
+                <div class="logo"></div> 
             </RouterLink>
 
             <a 
@@ -34,9 +37,9 @@
                     Home
                 </RouterLink>
 
-                <a class="navbar-item">
+                <!-- <a class="navbar-item">
                     Documentation
-                </a>
+                </a> -->
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
@@ -70,9 +73,12 @@
                         <a class="button is-primary">
                             <strong>Sign up</strong>
                         </a>
-                        <TheLogout v-if="logged"></TheLogout>
+                        <TheLogout 
+                            v-if="logged"
+                            @click.prevent="isActive = false"></TheLogout>
                         <RouterLink
                             v-else
+                            @click.prevent="isActive = false"
                             class="button is-light" 
                             :to="{ name: 'singin' }">
                             Log in
@@ -98,6 +104,19 @@ defineProps({
         type: Boolean,
         default: false
     }
-})
-
+});
 </script>
+<style lang="scss" scoped>
+    .logo{
+        display: inline-block;
+        width: 112px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        &::before{
+            content: "WebFerrol";
+            font-variant: small-caps;
+            font-size: 1.2em;
+        }
+    }
+</style>

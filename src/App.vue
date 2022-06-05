@@ -8,15 +8,9 @@ store.logged();//Comprobamos si el usuario está logueado
 </script>
 
 <template>
-  <header>
-       
-      <TheMenu :logged="store.isLogged"></TheMenu>
-       {{store.getUser.email}}
-      
-   
-  </header>
-
+  <TheMenu :logged="store.isLogged"></TheMenu>
   <RouterView />
+   {{store.getUser.email}}
 </template>
 
 <style lang="scss">
