@@ -32,6 +32,7 @@
             <div class="navbar-start">
                 <RouterLink
                     @click.prevent="isActive = false"
+                    v-if="logged"
                     class="navbar-item" 
                     :to="{name:'workexperience'}">
                     Experiencia laboral
