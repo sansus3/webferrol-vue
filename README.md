@@ -31,3 +31,8 @@ npm run build
 ## Bulma
 
 See [Bulma CSS Framework reference](https://bulma.io/).
+
+## Cloud Storage (firebase)
+
+See [Cloud Storage Firebase](https://firebase.google.com/docs/storage/web/start?hl=es&authuser=0).
+

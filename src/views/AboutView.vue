@@ -10,12 +10,13 @@
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <img src="@/assets/xurxo.jpg" alt="Placeholder image">
+              <img v-if="loaded" :src="url" style="object-fit:cover" alt="Placeholder image">
+              <div v-else class="loader is-loading"></div>
             </figure>
           </div>
           <div class="media-content" v-if="loaded">
             <p class="title is-4">{{ store.getFullName }}
-            <time class="title is-6" :datetime="store.getBirhDate">{{ store.getBirhDate }}</time>
+              <time class="title is-6" :datetime="store.getBirhDate">{{ store.getBirhDate }}</time>
             </p>
             <p class="subtitle is-6">{{ store.userProfile.emails[0] }}</p>
           </div>
@@ -23,14 +24,14 @@
         <div class="content" v-if="loaded">
           {{ store.userProfile.whoami }}
           <div class="tags">
-            <span
-              v-for="(title,key) in store.getKnowledge('title')"
-              :key="key"
-              class="tag is-info m-1">{{title}}</span>
+            <span v-for="(title, key) in store.getKnowledge('title')" :key="key" class="tag is-info m-1">{{ title }}</span>
           </div>
         </div>
         <div v-else class="content loader-wrapper">
           <div class="loader is-loading"></div>
+        </div>
+        <div v-if="error" class="notification is-danger">
+          {{ error.message }}
         </div>
       </div>
     </div>
@@ -40,17 +41,24 @@
 <script setup>
 //Libraries
 import { useStoreProfile } from '@/stores/profile';
+import { getURL } from '@/firebase.cloud.storage';
 import { ref } from 'vue';
 //Obtenemos el store Pinia
 const store = useStoreProfile();
 const loaded = ref(false);
-//Lanzamos la promesa
+
+const url = ref(null);
+const error = ref(false);
+
+
 (async () => {
   try {
+    error.value = false;
     await store.getUserProfile();
+    url.value = await getURL('profile/xurxo200x200.jpg');
     loaded.value = true;
-  } catch (error) {
-    console.log('UserProfile.vue', error);
+  } catch (myError) {
+    error.value = myError;
   }
 })();
 </script>
@@ -61,6 +69,7 @@ const loaded = ref(false);
   display: flex;
   justify-content: center;
   align-items: center;
+
   .loader {
     height: 80px;
     width: 80px;

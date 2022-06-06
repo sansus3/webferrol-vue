@@ -33,8 +33,8 @@
                 <RouterLink
                     @click.prevent="isActive = false"
                     class="navbar-item" 
-                    to="/">
-                    Home
+                    :to="{name:'workexperience'}">
+                    Experiencia laboral
                 </RouterLink>
 
                 <!-- <a class="navbar-item">

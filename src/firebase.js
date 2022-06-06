@@ -20,10 +20,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
+const db = getFirestore(firebaseApp);
 
 
 
@@ -44,4 +44,4 @@ enableIndexedDbPersistence(db)
 //const analytics = getAnalytics(app);
 const auth = getAuth();
 
-export { db, auth }
+export { firebaseApp, db, auth }
