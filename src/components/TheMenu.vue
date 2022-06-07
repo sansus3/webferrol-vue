@@ -96,7 +96,6 @@
 import { ref } from 'vue';
 import TheLogout from './login/TheLogout.vue';
 const isActive = ref(false);
-
 defineProps({
     /**
      * @type {Boolean} looged - Con esta propieda si el usuario está logueado hacemos desaparecer el botón de "Log in"
