@@ -21,7 +21,7 @@
         </div>
         <div class="field is-grouped">
             <div class="control">
-                <button :disabled="validate || store.isLogged" class="button is-link">LogIn</button>
+                <button :disabled="validate || store.isLogged" class="button is-link" :class="isLoading">LogIn</button>
             </div>
         </div>
     </form>
@@ -38,6 +38,10 @@ const form = reactive({
     email: 'gonzaleztenreiro@gmail.com',
     password: 'Tq0xuxvBMs27042304()'
 });
+
+const isLoading = reactive({//Para el boton
+  'is-loading': false
+});
 const error = ref(false);
 const notification = ref(false);
 
@@ -51,15 +55,20 @@ const closeNotification = () => {
 
 const signIn = async () => {
     try {
+        isLoading['is-loading']=true;  
         error.value = false;
         notification.value = false;
         await store.signIn(form);
+        form.email='';
+        form.password='';
     } catch (e) {
         //Errores
         //https://firebase.google.com/docs/auth/admin/errors?hl=es&authuser=0
         //console.log(e.code,'=>',e.message);
         error.value = e;
         notification.value = true;
+    } finally{
+        isLoading['is-loading']=false;  
     }
 }
 </script>

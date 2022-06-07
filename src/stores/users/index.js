@@ -69,6 +69,7 @@ Autenticación de Firebase
          * @param {Object} state - La propiedad "state" de Pinia
          * @returns {String|Object} - state.user - {uid,email,emailVerified,isAnonymous,providerData,stsTokenManager,createdAt,lastLoginAt,apiKey,appName}
          */
-        getUser: (state) => state.user===null?'':state.user
+        getUser: (state) => state.user===null?'':state.user,
+        getUserEmail: (state) => state.user!==null && state.user.email?state.user.email:''
     }
 });

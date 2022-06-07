@@ -1,13 +1,14 @@
 <template>
     <nav 
         class="navbar" 
-        :class="[logged ? 'is-dark' : 'is-info']"
+        :class="[store.isLogged ? 'is-dark' : 'is-info']"
         role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <RouterLink
                 @click.prevent="isActive = false"
                 class="navbar-item" 
                 to="/">
+                <div v-if="store.isLogged" class="user">{{store.getUserEmail}}</div>
                 <div class="logo"></div> 
             </RouterLink>
 
@@ -35,7 +36,7 @@
                 <!-- <a class="navbar-item">
                     Documentation
                 </a> -->
-                <div v-if="logged" class="navbar-item has-dropdown is-hoverable">
+                <div v-if="store.isLogged" class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         Experiencias
                     </a>
@@ -45,8 +46,8 @@
                             class="navbar-item" 
                             :to="{name:'workexperience'}">
                             Experiencia laboral
-                        </RouterLink>
-                        <hr class="navbar-divider">
+                        </RouterLink>  
+                        <hr class="navbar-divider">                      
                         <RouterLink
                             @click.prevent="isActive = false"
                             class="navbar-item" 
@@ -85,11 +86,11 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary">
+                        <!-- <a class="button is-primary">
                             <strong>Sign up</strong>
-                        </a>
+                        </a> -->
                         <TheLogout 
-                            v-if="logged"
+                            v-if="store.isLogged"
                             @click.prevent="isActive = false"></TheLogout>
                         <RouterLink
                             v-else
@@ -107,18 +108,10 @@
 
 <script setup>
 //Libraries
-import { ref } from 'vue';
-import TheLogout from './login/TheLogout.vue';
+import { inject, ref } from 'vue';
+import TheLogout from '@/components/login/TheLogout.vue';
 const isActive = ref(false);
-defineProps({
-    /**
-     * @type {Boolean} looged - Con esta propieda si el usuario está logueado hacemos desaparecer el botón de "Log in"
-     */
-    logged: {
-        type: Boolean,
-        default: false
-    }
-});
+const store = inject('store');
 </script>
 <style lang="scss" scoped>
     .logo{

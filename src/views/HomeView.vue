@@ -95,18 +95,36 @@
             </div>
           </div>
         </div>
-        <!-- Fin contenido 1 -->        
+        <!-- Fin contenido 1 -->
+        <!-- Contenido 2 -->
+        <div class="column is-one-quarter">
+          <div class="tile is-ancestor">
+            <div class="tile is-parent">
+              <article class="tile is-child notification is-success">
+                <div class="content">
+                  <p class="title">Firebase: Storage</p>
+                  <a class="subtitle" href="https://firebase.google.com/docs/storage/web/start?hl=es&authuser=0" target="_blank">
+                    Gestiona ficheros, imágenes en el Cloud Storage ...</a>
+                  <div class="content">
+                    <!-- Content -->
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <!-- Fin contenido 2 -->        
       </div>
     </div><!-- End Firebase -->
 
     <!-- Trabajos -->
     <div class="home content is-medium p-5">
-      <h1 class="title has-text-centered">Trabajos</h1>
+      <h1 class="title has-text-centered">Cloud Storage</h1>
       <div class="columns is-multiline">
         <!-- Contenido 1 -->
         <div class="column is-one-quarter" v-for="(src, index) in files"
             :key="index">
-          <img style="object-fit:cover; width: 100%" :src="src" :alt="`Proyecto ${index + 1}`">
+          <img style="object-fit:cover; width: 100%;min-height: 400px;" :src="src" :alt="`Proyecto ${index + 1}`">
         </div>
         <!-- Fin contenido 1 -->        
       </div>
