@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- Conceptos vue -->
     <div class="home content is-medium p-5">
       <h1 class="title has-text-centered">Conceptos Vue</h1>
       <div class="columns is-multiline">
@@ -20,7 +21,7 @@
             </div>
           </div>
         </div>
-         <!-- Contenido 2 -->
+        <!-- Contenido 2 -->
         <div class="column is-one-quarter">
           <div class="tile is-ancestor">
             <div class="tile is-parent">
@@ -37,7 +38,7 @@
             </div>
           </div>
         </div>
-         <!-- Contenido 3 -->
+        <!-- Contenido 3 -->
         <div class="column is-one-quarter">
           <div class="tile is-ancestor">
             <div class="tile is-parent">
@@ -72,11 +73,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- End Conceptos vue -->
     <!-- Firebase -->
     <div class="home content is-medium p-5">
       <h1 class="title has-text-centered">Conceptos Firebase</h1>
-      <div class="columns is-multiline">        
+      <div class="columns is-multiline">
         <!-- Contenido 1 -->
         <div class="column is-one-quarter">
           <div class="tile is-ancestor">
@@ -94,8 +95,31 @@
             </div>
           </div>
         </div>
-        <!-- Fin contenido 1 -->
+        <!-- Fin contenido 1 -->        
       </div>
-    </div>
+    </div><!-- End Firebase -->
+
+    <!-- Trabajos -->
+    <div class="home content is-medium p-5">
+      <h1 class="title has-text-centered">Trabajos</h1>
+      <div class="columns is-multiline">
+        <!-- Contenido 1 -->
+        <div class="column is-one-quarter" v-for="(src, index) in files"
+            :key="index">
+          <img style="object-fit:cover; width: 100%" :src="src" :alt="`Proyecto ${index + 1}`">
+        </div>
+        <!-- Fin contenido 1 -->        
+      </div>
+    </div><!-- End Trabajos -->
+
   </div>
 </template>
+
+<script setup>
+import { listAllUrls } from '@/firebase.cloud.storage';
+import { ref } from 'vue';
+const files = ref([]);
+(async () => {
+  files.value = await listAllUrls('gs://webferrol-app.appspot.com/proyectos');
+})();
+</script>

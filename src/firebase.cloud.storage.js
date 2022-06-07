@@ -1,4 +1,4 @@
-import { getStorage, ref,getDownloadURL  } from "firebase/storage";
+import { getStorage, ref,getDownloadURL,listAll  } from "firebase/storage";
 
 //Creamos referencia
 export const storage = getStorage();

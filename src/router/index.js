@@ -29,6 +29,13 @@ const router = createRouter({
       },
     },
     {
+      path: '/new-experience',
+      name: 'newexperience',
+      component: function () {
+        return import('@/views/backend/NewExperienceView.vue')
+      },
+    },
+    {
       path: '/sign-in',
       name: 'singin',
       // route level code-splitting

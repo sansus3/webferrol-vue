@@ -30,17 +30,31 @@
             class="navbar-menu"
             :class="{ 'is-active': isActive }">
             <div class="navbar-start">
-                <RouterLink
-                    @click.prevent="isActive = false"
-                    v-if="logged"
-                    class="navbar-item" 
-                    :to="{name:'workexperience'}">
-                    Experiencia laboral
-                </RouterLink>
+                
 
                 <!-- <a class="navbar-item">
                     Documentation
                 </a> -->
+                <div v-if="logged" class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Experiencias
+                    </a>
+                    <div class="navbar-dropdown">
+                        <RouterLink
+                            @click.prevent="isActive = false"                            
+                            class="navbar-item" 
+                            :to="{name:'workexperience'}">
+                            Experiencia laboral
+                        </RouterLink>
+                        <hr class="navbar-divider">
+                        <RouterLink
+                            @click.prevent="isActive = false"
+                            class="navbar-item" 
+                            :to="{name:'newexperience'}">
+                            Nueva experiencia
+                        </RouterLink>
+                    </div>
+                </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">

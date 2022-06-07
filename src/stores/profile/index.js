@@ -65,8 +65,6 @@ export const useStoreProfile = defineStore({
                 const from = payment.dateStart.split('-');
                 const dateStart = new Date(payment.dateStart);
                 payment.dateStart = new Date(from[0], Number(from[1]) - 1, from[2]);
-            } else {
-                delete payment.dateStart;
             }
             await setDoc(doc(db, "workExperience", `${Date.now()}`), payment);
         }
