@@ -1,7 +1,15 @@
 import { defineStore } from "pinia";
 
 import { db } from "@/firebase";
-import { collection, query, orderBy, getDocs, setDoc, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { collection, 
+         getDocs,
+         setDoc,
+         doc,
+         getDoc,
+         onSnapshot,
+         query, 
+         orderBy,
+         limit} from "firebase/firestore";
 
 
 export const useStoreProfile = defineStore({
@@ -33,7 +41,7 @@ export const useStoreProfile = defineStore({
                 return;
             const col = collection(db, "workExperience");
             onSnapshot(col);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
-            const q = query(col, orderBy("dateStart", "desc"));
+            const q = query(col, orderBy("dateStart"),limit(20));
             const querySnapshot = await getDocs(q);
             //console.log(querySnapshot.docs) //Retorna un array de documentos Firestore
             this.workExperiences = querySnapshot.docs.map(doc => doc.data());//Insertamos cada objeto de datos en el array 
@@ -63,7 +71,6 @@ export const useStoreProfile = defineStore({
             payment.dateEnd = new Date(from[0], Number(from[1]) - 1, from[2]);
             if (payment.dateStart && payment.dateStart.length) {
                 const from = payment.dateStart.split('-');
-                const dateStart = new Date(payment.dateStart);
                 payment.dateStart = new Date(from[0], Number(from[1]) - 1, from[2]);
             }
             await setDoc(doc(db, "workExperience", `${Date.now()}`), payment);

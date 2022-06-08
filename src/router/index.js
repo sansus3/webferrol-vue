@@ -12,6 +12,9 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
+      meta: {
+        title: 'Acerca de Xurxo',
+      },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -20,10 +23,9 @@ const router = createRouter({
     {
       path: '/workexperience',
       name: 'workexperience',
-      //meta: { requiresAuth: true },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+      meta: {
+        title: 'Experiencias',
+      },
       component: function () {
         return import(/* webpackChunkName: "about" */ '@/views/private/WorkExperienceView.vue')
       },
@@ -31,6 +33,9 @@ const router = createRouter({
     {
       path: '/new-experience',
       name: 'newexperience',
+      meta: {
+        title: 'Nueva experiencia',
+      },
       component: function () {
         return import('@/views/backend/NewExperienceView.vue')
       },
@@ -38,12 +43,20 @@ const router = createRouter({
     {
       path: '/sign-in',
       name: 'singin',
+      meta: {
+        title: 'Log in',
+      },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/SignInView.vue')
     }
   ]
-})
+});
+
+router.beforeEach((to,from,next)=>{
+  window.document.title = to.meta.title?to.meta.title:'WebFerrol';
+  next();
+});
 
 export default router
