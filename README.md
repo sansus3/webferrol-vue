@@ -36,3 +36,10 @@ See [Bulma CSS Framework reference](https://bulma.io/).
 
 See [Cloud Storage Firebase](https://firebase.google.com/docs/storage/web/start?hl=es&authuser=0).
 
+## Dynamic Page Titles With The Vue 3 Router | Vue-Router Mastery
+
+See [Dynamic Page Titles With The Vue 3 Router](https://www.youtube.com/watch?v=W6qpsmkuJ8c).
+
+## Generador de favicon
+
+See [Favicon Converter](https://favicon.io/favicon-converter/)
