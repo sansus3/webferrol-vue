@@ -100,7 +100,7 @@
       <h1 class="title has-text-centered">Conceptos Firebase</h1>
       <div class="columns is-multiline">
         <!-- Contenido 1 -->
-        <div class="column is-half">
+        <div class="column is-one-third">
           <div class="tile is-ancestor">
             <div class="tile is-parent">
               <article class="tile is-child notification is-warning">
@@ -118,7 +118,7 @@
         </div>
         <!-- Fin contenido 1 -->
         <!-- Contenido 2 -->
-        <div class="column is-half">
+        <div class="column is-one-third">
           <div class="tile is-ancestor">
             <div class="tile is-parent">
               <article class="tile is-child notification is-success">
@@ -136,6 +136,25 @@
           </div>
         </div>
         <!-- Fin contenido 2 -->
+        <!-- Contenido 3 -->
+        <div class="column is-one-third">
+          <div class="tile is-ancestor">
+            <div class="tile is-parent">
+              <article class="tile is-child notification is-info">
+                <div class="content">
+                  <p class="title">Cloud Firestore</p>
+                  <a class="subtitle" href="https://firebase.google.com/docs/firestore"
+                    target="_blank">
+                    Base de datos NoSQL flexible, escalable y en la nube </a>
+                  <div class="content">
+                    <!-- Content -->
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <!-- Fin contenido 3 -->
       </div>
     </div><!-- End Firebase -->
 
