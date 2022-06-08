@@ -1,7 +1,7 @@
 <template>
     <article class="message is-danger m-3" v-if="errorOutput.error">
         <div class="message-header">
-            <p>Error</p>
+            <p>{{errorOutput && errorOutput.title?errorOutput.title: 'Error'}}</p>
             <button @click="closeErroOutput" class="delete" aria-label="delete"></button>
         </div>
         <div class="message-body">
@@ -14,7 +14,7 @@
 const props = defineProps({
     errorOutput: {
         type: Object,
-        default: () => ({ error: false, message: '' })
+        default: () => ({ error: false, message: '', title: 'Error' })
     }
 });
 

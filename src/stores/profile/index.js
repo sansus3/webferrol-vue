@@ -100,6 +100,12 @@ export const useStoreProfile = defineStore({
         getKnowledge(state) {
             if (!state.userProfile || !state.userProfile.knowledge) return [];
             return (arg) => state.userProfile.knowledge.map((el) => el[arg]);
-        }
+        },
+        /**
+         * 
+         * @param {Object} state 
+         * @returns {String} Retorna una imagen del Cloud Storage
+         */
+        getPhoto: (state) => state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:''
     }
 });

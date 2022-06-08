@@ -118,6 +118,7 @@ const insertExperience = async () => {
   try {
     isLoading['is-loading']=true;    
     await store.insertWorkExperience({...form});
+    store.workExperiences = []; //Para cuando entremos en el array recargue el contenido
     reloadForm();
   } catch (error) {
     errorOutput.error = true;

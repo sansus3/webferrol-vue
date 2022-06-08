@@ -3,14 +3,19 @@
     <div class="card column is-half">
       <div class="card-image">
         <figure class="image is-4by3">
-          <img src="@/assets/programming.jpg" alt="Placeholder image">
+          <img src="@/assets/programming.jpg" alt="Programación">
         </figure>
       </div>
       <div class="card-content">
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <img v-if="loaded" :src="url" style="object-fit:cover" alt="Placeholder image">
+              <img 
+                v-if="loadedImg"
+                class="is-rounded" 
+                :src="url" 
+                style="object-fit:cover" 
+                :alt="store.getFullName">
               <div v-else class="loader is-loading"></div>
             </figure>
           </div>
@@ -46,6 +51,7 @@ import { ref } from 'vue';
 //Obtenemos el store Pinia
 const store = useStoreProfile();
 const loaded = ref(false);
+const loadedImg = ref(false);
 
 const url = ref(null);
 const error = ref(false);
@@ -55,8 +61,11 @@ const error = ref(false);
   try {
     error.value = false;
     await store.getUserProfile();
-    url.value = await getURL('profile/xurxo200x200.jpg');
     loaded.value = true;
+    console.log(store.getPhoto)
+    url.value = await getURL(store.getPhoto);
+    loadedImg.value = true;
+    
   } catch (myError) {
     error.value = myError;
   }

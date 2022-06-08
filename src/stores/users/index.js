@@ -70,6 +70,11 @@ Autenticación de Firebase
          * @returns {String|Object} - state.user - {uid,email,emailVerified,isAnonymous,providerData,stsTokenManager,createdAt,lastLoginAt,apiKey,appName}
          */
         getUser: (state) => state.user===null?'':state.user,
-        getUserEmail: (state) => state.user!==null && state.user.email?state.user.email:''
+        /**
+         * 
+         * @param {Object} state 
+         * @returns {String} - Retorna el email si existe la propiedad o vacío
+         */
+        getUserEmail: (state) => state.user!==null && state.user.email?state.user.email:'',       
     }
 });

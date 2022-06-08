@@ -1,15 +1,16 @@
 <template>
+    <MessageDanger :errorOutput="modal"></MessageDanger>
     <form class="my-form" id="signIn" @submit.prevent="signIn" action="#">
         <ul class="field">
             <li class="field">
-                <label class="label" for="email">Correo</label>
+                <label class="label" for="email">Correo <span class="has-text-danger">*</span></label>
                 <div class="control">
                     <input required v-model.trim="form.email" type="email" id="email" class="input">
                     <p class="help">Correo de acceso a área privada</p>
                 </div>
             </li>
             <li class="field">
-                <label class="label" for="passord">Password</label>
+                <label class="label" for="passord">Password <span class="has-text-danger">*</span></label>
                 <div class="control">
                     <input required v-model.trim="form.password" type="password" id="password" class="input">
                 </div>
@@ -31,12 +32,14 @@
 //Libraries
 import { useStoreUsers } from '@/stores/users';
 import { ref, reactive, computed } from 'vue';
+import MessageDanger from '../MessageDanger.vue';
 //Cargamos store
 const store = useStoreUsers();
+const modal = reactive({error: true, message: 'Los campos con asterisco son obligatorios',title: 'Atención'});
 //Variables
 const form = reactive({
     email: 'gonzaleztenreiro@gmail.com',
-    password: 'Tq0xuxvBMs27042304()'
+    password: ''
 });
 
 const isLoading = reactive({//Para el boton
