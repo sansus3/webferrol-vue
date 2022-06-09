@@ -24,8 +24,8 @@
 <script setup>
 import { listAllUrls } from '@/firebase.cloud.storage';
 import { ref } from 'vue';
-import ConceptosVueView from '@/views/public/ConceptosVueView.vue';
-import ConceptosFirebaseView from '@/views/public/ConceptosFirebaseView.vue';
+import ConceptosVueView from '@/public/ConceptosVueView.vue';
+import ConceptosFirebaseView from '@/public/ConceptosFirebaseView.vue';
 const files = ref([]);
 (async () => {
   files.value = await listAllUrls('proyectos');
