@@ -67,7 +67,7 @@
         </li>
       </ul>
       <div class="has-text-centered">
-        <message-danger :errorOutput="errorOutput"></message-danger>
+        <TheMessage :errorOutput="errorOutput"></TheMessage>
         <button :disabled="disabled" class="button is-link" :class="isLoading">Nueva experiencia</button>       
       </div>
     </form>
@@ -76,7 +76,7 @@
 <script setup>
 import { reactive, computed } from 'vue';
 import { useStoreProfile } from '@/stores/profile';
-import MessageDanger from '@/components/MessageDanger.vue';
+import TheMessage from '../../components/TheMessage.vue';
 //Valores del formulario
 const form = reactive({
   code: '',

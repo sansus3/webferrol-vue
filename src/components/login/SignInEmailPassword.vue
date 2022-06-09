@@ -1,5 +1,5 @@
 <template>
-    <MessageDanger :errorOutput="modal"></MessageDanger>
+    <TheMessage :errorOutput="modal"></TheMessage>
     <form class="my-form" id="signIn" @submit.prevent="signIn" action="#">
         <ul class="field">
             <li class="field">
@@ -32,10 +32,13 @@
 //Libraries
 import { useStoreUsers } from '@/stores/users';
 import { ref, reactive, computed } from 'vue';
-import MessageDanger from '../MessageDanger.vue';
+import { useRouter } from "vue-router";
+import TheMessage from '../TheMessage.vue';
 //Cargamos store
 const store = useStoreUsers();
-const modal = reactive({error: true, message: 'Los campos con asterisco son obligatorios',title: 'Atención'});
+//cargamos router
+const router = useRouter();
+const modal = reactive({error: true, message: 'Los campos con asterisco son obligatorios',title: 'Atención', class:'is-warning'});
 //Variables
 const form = reactive({
     email: 'gonzaleztenreiro@gmail.com',
@@ -61,9 +64,8 @@ const signIn = async () => {
         isLoading['is-loading']=true;  
         error.value = false;
         notification.value = false;
-        await store.signIn(form);
-        form.email='';
-        form.password='';
+        await store.signIn(form);        
+        router.push({name:'home'});
     } catch (e) {
         //Errores
         //https://firebase.google.com/docs/auth/admin/errors?hl=es&authuser=0
