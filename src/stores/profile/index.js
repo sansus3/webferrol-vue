@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-
+import { getURL } from '@/firebase.cloud.storage';
 import { db } from "@/firebase";
 import { collection, 
          getDocs,
@@ -59,7 +59,7 @@ export const useStoreProfile = defineStore({
             if (docSnap.exists()) {
                 this.userProfile = docSnap.data();
                 //console.log(docSnap.id,docSnap.data());
-            }
+            }   
         },
         /**
          * Función en la que añadimos una nueva experiencia de usuario
@@ -111,8 +111,8 @@ export const useStoreProfile = defineStore({
         /**
          * 
          * @param {Object} state 
-         * @returns {String} Retorna una imagen del Cloud Storage
+         * @returns {String} Retorna la url una imagen del Cloud Storage
          */
-        getPhoto: (state) => state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:''
+        getPhotoURL: async state  => await getURL(state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:'')
     }
 });

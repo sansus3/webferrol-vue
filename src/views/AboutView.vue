@@ -46,12 +46,11 @@
 <script setup>
 //Libraries
 import { useStoreProfile } from '@/stores/profile';
-import { getURL } from '@/firebase.cloud.storage';
 import { ref } from 'vue';
 //Obtenemos el store Pinia
 const store = useStoreProfile();
-const loaded = ref(false);
-const loadedImg = ref(false);
+const loaded = ref(false);//Carga de texto
+const loadedImg = ref(false);//Carga de imagen del profile
 
 const url = ref(null);
 const error = ref(false);
@@ -62,8 +61,7 @@ const error = ref(false);
     error.value = false;
     await store.getUserProfile();
     loaded.value = true;
-    console.log(store.getPhoto)
-    url.value = await getURL(store.getPhoto);
+    url.value = await store.getPhotoURL;
     loadedImg.value = true;
     
   } catch (myError) {

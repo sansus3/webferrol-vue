@@ -36,20 +36,26 @@
                 <!-- <a class="navbar-item">
                     Documentation
                 </a> -->
-                <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                <div 
+                    v-if="isLogged" 
+                    class="navbar-item has-dropdown"
+                    :class="{ 'is-hoverable': isHoverable }"
+                    >
+                    <a 
+                        class="navbar-link"
+                        @mouseover="isHoverable=true">
                         Experiencias
                     </a>
                     <div class="navbar-dropdown">
                         <RouterLink
-                            @click.prevent="isActive = false"                            
+                            @click.prevent="navbarDropdownClose"                            
                             class="navbar-item" 
                             :to="{name:'workexperience'}">
                             Experiencia laboral
                         </RouterLink>  
                         <hr class="navbar-divider">                      
                         <RouterLink
-                            @click.prevent="isActive = false"
+                            @click.prevent="navbarDropdownClose"
                             class="navbar-item" 
                             :to="{name:'newexperience'}">
                             Nueva experiencia
@@ -57,14 +63,18 @@
                     </div>
                 </div>
 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                <div 
+                    class="navbar-item has-dropdown"
+                    :class="{ 'is-hoverable': isHoverable }">
+                    <a 
+                        class="navbar-link"
+                        @mouseover="isHoverable=true">
                         Más
                     </a>
 
                     <div class="navbar-dropdown">
                         <RouterLink 
-                            @click.prevent="isActive = false"
+                            @click.prevent="navbarDropdownClose"
                             class="navbar-item" 
                             to="/about">
                             About
@@ -111,6 +121,11 @@
 import { inject, ref, toRefs } from 'vue';
 import TheLogout from '@/components/login/TheLogout.vue';
 const isActive = ref(false);
+const isHoverable = ref(false);//para la clase is-hoverable
+const navbarDropdownClose = () => {
+    isActive.value = false;
+    isHoverable.value = false;
+}
 const {getUserEmail,isLogged} = toRefs(inject('store'));//Con toRefs mantenemos la reactividad aunque hagamos destructuring
 
 </script>
