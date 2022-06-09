@@ -1,14 +1,14 @@
 <template>
     <nav 
         class="navbar" 
-        :class="[store.isLogged ? 'is-dark' : 'is-info']"
+        :class="[isLogged ? 'is-dark' : 'is-info']"
         role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <RouterLink
                 @click.prevent="isActive = false"
                 class="navbar-item" 
                 to="/">
-                <div v-if="store.isLogged" class="user">{{store.getUserEmail}}</div>
+                <div v-if="isLogged" class="user">{{getUserEmail}}</div>
                 <div class="logo"></div> 
             </RouterLink>
 
@@ -36,7 +36,7 @@
                 <!-- <a class="navbar-item">
                     Documentation
                 </a> -->
-                <div v-if="store.isLogged" class="navbar-item has-dropdown is-hoverable">
+                <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         Experiencias
                     </a>
@@ -90,7 +90,7 @@
                             <strong>Sign up</strong>
                         </a> -->
                         <TheLogout 
-                            v-if="store.isLogged"
+                            v-if="isLogged"
                             @click.prevent="isActive = false"></TheLogout>
                         <RouterLink
                             v-else
@@ -108,10 +108,11 @@
 
 <script setup>
 //Libraries
-import { inject, ref } from 'vue';
+import { inject, ref, toRefs } from 'vue';
 import TheLogout from '@/components/login/TheLogout.vue';
 const isActive = ref(false);
-const store = inject('store');
+const {getUserEmail,isLogged} = toRefs(inject('store'));//Con toRefs mantenemos la reactividad aunque hagamos destructuring
+
 </script>
 <style lang="scss" scoped>
     .logo{
