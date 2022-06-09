@@ -1,5 +1,8 @@
 <template>
     <div class="section work-experience columns is-multiline">
+        <div v-if="errorOutput.error" class="column title has-text-centered notification is-danger">
+            {{ errorOutput.message }}
+        </div>
         <div class="column is-one-quarter" v-for="(item, key) in store.workExperiences" :key="key">
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
@@ -37,10 +40,7 @@
         </div>
         <!-- <pre>
             {{data}}
-        </pre> -->
-        <div v-if="errorOutput.error" class="notification is-danger">
-            {{ errorOutput.message }}
-        </div>
+        </pre> -->        
     </div>
 </template>
 
