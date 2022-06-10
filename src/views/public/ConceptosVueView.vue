@@ -26,11 +26,11 @@
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-success">
                             <div class="content">
-                                <p class="title">Firebase: Storage</p>
+                                <p class="title">ref,reactive,refs</p>
                                 <a class="subtitle"
-                                    href="https://firebase.google.com/docs/storage/web/start?hl=es&authuser=0"
+                                    href="https://vuejs.org/api/reactivity-core.html#ref"
                                     target="_blank">
-                                    Gestiona ficheros, imágenes en el Cloud Storage ...</a>
+                                    Toma un valor interno y devuelve un objeto de referencia reactivo y mutable. El objeto ref tiene una propiedad única .value que apunta al valor interno.</a>
                                 <div class="content">
                                     <!-- Content -->
                                 </div>

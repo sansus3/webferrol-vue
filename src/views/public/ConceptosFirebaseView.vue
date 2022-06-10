@@ -3,7 +3,7 @@
         <h1 class="title has-text-centered">Conceptos Firebase</h1>
         <div class="columns is-multiline">
             <!-- Contenido 1 -->
-            <div class="column is-one-third">
+            <div class="column is-half">
                 <div class="tile is-ancestor">
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-warning">
@@ -22,7 +22,7 @@
             </div>
             <!-- Fin contenido 1 -->
             <!-- Contenido 2 -->
-            <div class="column is-one-third">
+            <div class="column is-half">
                 <div class="tile is-ancestor">
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-success">
@@ -42,7 +42,7 @@
             </div>
             <!-- Fin contenido 2 -->
             <!-- Contenido 3 -->
-            <div class="column is-one-third">
+            <div class="column is-half">
                 <div class="tile is-ancestor">
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-info">
@@ -59,6 +59,24 @@
                 </div>
             </div>
             <!-- Fin contenido 3 -->
+            <!-- Contenido 4 -->
+            <div class="column is-half">
+                <div class="tile is-ancestor">
+                    <div class="tile is-parent">
+                        <article class="tile is-child notification is-danger">
+                            <div class="content">
+                                <p class="title">Reglas Firebase</p>
+                                <a class="subtitle" href="https://firebase.google.com/docs/rules/basics?hl=es-419" target="_blank">
+                                    Las reglas de seguridad de Firebase te permiten controlar el acceso a tus datos almacenados. </a>
+                                <div class="content">
+                                    <!-- Content -->
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin contenido 4 -->
         </div>
     </div>
 </template>

@@ -32,10 +32,13 @@
             :class="{ 'is-active': isActive }">
             <div class="navbar-start">
                 
-
-                <!-- <a class="navbar-item">
-                    Documentation
-                </a> -->
+                <RouterLink
+                @click.prevent="isActive = false"
+                class="navbar-item" 
+                to="/portfolio">                
+                    Portafolio
+                </RouterLink>
+                
                 <div 
                     v-if="isLogged" 
                     class="navbar-item has-dropdown"

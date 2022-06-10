@@ -47,8 +47,8 @@ const fileChange = (event) => {
         return;
     } else {
         //console.log(files)
-        const { name } = files[0];
-        fileName.value = name;
+        //const { name } = files[0];
+        fileName.value = files[0].name;
         emits('fileEmit',files[0]);
     }
 }

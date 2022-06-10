@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 //import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 
@@ -25,7 +26,8 @@ const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebaseApp);
 
-
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = getStorage(firebaseApp);
 
 //Activación de persistencia cuando no haya conexión de red
 enableIndexedDbPersistence(db)
@@ -44,4 +46,4 @@ enableIndexedDbPersistence(db)
 //const analytics = getAnalytics(app);
 const auth = getAuth();
 
-export { firebaseApp, db, auth }
+export { firebaseApp, db, auth, storage }

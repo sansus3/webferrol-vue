@@ -1,9 +1,19 @@
-import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
-
-//Creamos referencia
-export const storage = getStorage();
+import { storage } from "@/firebase";
+import { ref, getDownloadURL, listAll, uploadBytes } from "firebase/storage";
 
 
+
+/**
+ * 
+ * @param {Object} file - Fichero de tipo File o Blob que se quiere subir
+ * @param {String} url - URL. If empty, returns root reference.
+ * @returns {Object} A Promise containing an UploadResult
+ */
+export const uploadBlobFile = async (file, url = 'proyectos/imagen.jpg') => {
+    const storageRef = ref(storage, url);
+    // 'file' comes from the Blob or File API
+    return await uploadBytes(storageRef, file);
+}
 
 
 /**
