@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getURL } from '@/firebase.cloud.storage';
+import { getURL,listAllUrls } from '@/firebase.cloud.storage';
 import { db } from "@/firebase";
 import { collection, 
          getDocs,
@@ -28,9 +28,17 @@ export const useStoreProfile = defineStore({
          * Propiedad donde almacenamos información personal de usuario
          * @type {Object|null} userProfile - {name, firstSurname, secondSurname, birth, whoami}
          */
-        userProfile: null
+        userProfile: null,
+        portfolio: []
     }),
     actions: {
+        /**
+         * Cargamos en la propieda portfolio las urls de las imágenes que se encuentran en Cloud Store de la ruta "proyectos"
+         */
+        async setPortfolio(){
+            if(this.portfolio.length===0)
+                this.portfolio = await await listAllUrls('proyectos');
+        },
         /**
          * Cargamos un array de objetos (documents) de la collection "workExperience"
          * @link https://firebase.google.com/docs/firestore/query-data/get-data?hl=es&authuser=0

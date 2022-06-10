@@ -13,7 +13,7 @@
             </div>
             <div class="columns is-multiline">
                 <!-- Contenidos -->
-                <div v-if="files.length" class="column is-one-quarter" v-for="(src, index) in files" :key="index">
+                <div v-if="store.portfolio.length" class="column is-one-quarter" v-for="(src, index) in store.portfolio" :key="index">
                     <img style="object-fit:cover; width: 100%;min-height: 400px;" :src="src"
                         :alt="`Proyecto ${index + 1}`">
                 </div>
@@ -29,14 +29,17 @@
 </template>
 
 <script setup>
-import { listAllUrls } from '@/firebase.cloud.storage';
+import { useStoreProfile } from '../stores/profile';
 import { ref } from 'vue';
 import TheUploader from '@/components/TheUploader.vue';
 import TheMessage from '@/components/TheMessage.vue';
 import { uploadBlobFile } from '@/firebase.cloud.storage';
-const files = ref([]);
+
+const store = useStoreProfile();
+
+
 (async () => {
-  files.value = await listAllUrls('proyectos');
+  await store.setPortfolio();
 })();
 
 
@@ -50,7 +53,9 @@ const fileEmit = async file => {
             errores.value = {error:false};
             isLoading.value = true;
             const snapshot = await uploadBlobFile(file,`proyectos/${file.name}`);
-            console.log(snapshot)
+            store.portfolio = [];//reseteo 
+            store.setPortfolio();//recarga de fotos
+            //console.log(snapshot)
         } catch (error) {
             console.log(error);
             errores.value = {
