@@ -94,6 +94,24 @@
                     </div>
                 </div>
             </div>
+             <!-- Contenido 6 -->
+            <div class="column is-full">
+                <div class="tile is-ancestor">
+                    <div class="tile is-parent">
+                        <article class="tile is-child notification is-warning">
+                            <div class="content">
+                                <p class="title">Teleport</p>
+                                <a class="subtitle" href="https://vuejs.org/guide/built-ins/teleport.html"
+                                    target="_blank">
+                                    Is a built-in component that allows us to "teleport" a part of a component's template into a DOM node that exists outside the DOM hierarchy of that component.</a>
+                                <div class="content">
+                                    <a href="https://escuelavue.es/cursos/curso-vue3-esencial-novedades/vue-3-teleport/">Vue 3 teleport</a> es otra de las nuevas características para hacernos la vida más sencilla en determinadas situaciones.
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
