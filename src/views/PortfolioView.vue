@@ -65,9 +65,9 @@ const show = src => {
     source.value = src;
 }
 
-const fileEmit = async file => {
+const fileEmit = async ([file]) => {//destructuring
     if (file) {
-        console.log(file)
+        //console.log(file)
         try {
             errores.value = { error: false };
             isLoading.value = true;

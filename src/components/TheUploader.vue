@@ -4,6 +4,7 @@
             <input 
                 @change="fileChange($event)" 
                 :accept="accept"
+                :multiple="multiple"
                 class="file-input" type="file" name="resume">
             <span class="file-cta">
                 <span class="file-icon">
@@ -26,17 +27,21 @@ const fileName = ref('');
 
 defineProps({
     /**
-     * 
      * @type {String} accept - Tipo de ficheros que se admite subir
+     * @type {Boolean} multiple - Si se permite subir múltiples ficheros
      */
     accept: {
         type: String,
         default: "image/gif, image/jpeg, image/png",
     },
+    multiple: {
+        type: Boolean,
+        default: false
+    }
 });
 const emits = defineEmits(['fileEmit']);
 /**
-* Esta función emite una función para comunicarse con su componente padre y le pasará un objeto con el identificador y el fichero seleccionado o null si no se selecciona nada
+* Esta función emite/envía a su componente padre un array de objetos de tipo File
 * @param {Object} event Evento onchange de seleccionar una imagen
 */
 const fileChange = (event) => {
@@ -46,10 +51,9 @@ const fileChange = (event) => {
         fileName.value = '';
         return;
     } else {
-        //console.log(files)
-        //const { name } = files[0];
-        fileName.value = files[0].name;
-        emits('fileEmit',files[0]);
+        const names = [...files].map(element => element.name);
+        fileName.value = names.join();
+        emits('fileEmit',[...files]);
     }
 }
 
