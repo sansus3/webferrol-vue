@@ -10,6 +10,7 @@ import { collection,
          query, 
          orderBy,
          limit} from "firebase/firestore";
+import { useStoreUsers } from "../users";
 
 
 export const useStoreProfile = defineStore({
@@ -29,7 +30,7 @@ export const useStoreProfile = defineStore({
          * @type {Object|null} userProfile - {name, firstSurname, secondSurname, birth, whoami}
          */
         userProfile: null,
-        portfolio: []
+        portfolio: [],
     }),
     actions: {
         /**
@@ -121,6 +122,11 @@ export const useStoreProfile = defineStore({
          * @param {Object} state 
          * @returns {String} Retorna la url una imagen del Cloud Storage
          */
-        getPhotoURL: async state  => await getURL(state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:'')
+        getPhotoURL: async state  => await getURL(state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:''),
+        isLogged: async (state) => {
+            const store = useStoreUsers();
+            await store.logged();
+            return store.isLogged;
+        }
     }
 });

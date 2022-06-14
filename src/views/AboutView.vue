@@ -15,13 +15,13 @@
                 class="is-rounded" 
                 :src="url" 
                 style="object-fit:cover" 
-                :alt="store.getFullName">
+                :alt="store?.getFullName">
               <div v-else class="loader is-loading"></div>
             </figure>
           </div>
           <div class="media-content" v-if="loaded">
-            <p class="title is-4">{{ store.getFullName }}
-              <time class="title is-6" :datetime="store.getBirhDate">{{ store.getBirhDate }}</time>
+            <p class="title is-4">{{ store?.getFullName }}
+              <time class="title is-6" :datetime="store?.getBirhDate">{{ store.getBirhDate }}</time>
             </p>
             <p class="subtitle is-6">{{ store.userProfile.emails[0] }}</p>
           </div>
@@ -50,7 +50,7 @@ import { ref } from 'vue';
 //Obtenemos el store Pinia
 const store = useStoreProfile();
 const loaded = ref(false);//Carga de texto
-const loadedImg = ref(false);//Carga de imagen del profile
+const loadedImg = ref(false);//Loader para la carga de imagen del profile
 
 const url = ref(null);
 const error = ref(false);

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { signInWithEmailAndPassword,onAuthStateChanged,signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from '@/firebase';
 
 export const useStoreUsers = defineStore({
@@ -12,11 +12,6 @@ export const useStoreUsers = defineStore({
          * @link https://firebase.google.com/docs/auth/web/manage-users?hl=es&authuser=0
          */
         user: null,
-        /**
-         * Propiedad que nos indica si el usuario de la propiedad "user" tiene o no una sesión abierta
-         * @type {Boolean} - isLogged
-         */
-        isLogged: false
     }),
     actions: {
         /**
@@ -25,7 +20,7 @@ Autenticación de Firebase
          * @param {Object}  - Se trata de un objeto desestructurado donde se nos pasa el usuario y la contraseña
          * @link https://firebase.google.com/docs/auth/web/password-auth?hl=es&authuser=0
          */
-        async signIn({email, password}) {
+        async signIn({ email, password }) {
             //console.log(email,password)
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             this.user = userCredential.user;
@@ -35,46 +30,53 @@ Autenticación de Firebase
          * Método que nos permite cerrar sesión de un usuario. Ver autentificación en el enlace de abajo.
          * @link https://firebase.google.com/docs/auth/web/password-auth?hl=es&authuser=0
          */
-        async loginOut(){
+        async loginOut() {
             await signOut(auth);
             this.user = null;
-            this.isLogged = false;
         },
         /**
          * Método que nos permite recargar la propiedad "user" del state en caso de refrescar la página.
          * @returns {null} -Retornamos null, es decir salimos del método en caso de que la propiedad user se encuentre cargada
          */
-        logged(){
-            if(this.user!==null)
+        async logged() {
+            if (this.user !== null)
                 return;
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                      // User is signed in, see docs for a list of available properties
-                      // https://firebase.google.com/docs/reference/js/firebase.User
-                      //const uid = user.uid;
-                      //console.log("id",uid,"user",user)
-                      // ...
-                      this.user = user;
-                      this.isLogged = true;
-                    } else {
-                      // User is signed out
-                      // ...
-                    }
-                  });
+            this.user = await new Promise(
+                (resolve, reject) => {
+                    const subscribe = onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            // User is signed in, see docs for a list of available properties
+                            // https://firebase.google.com/docs/reference/js/firebase.User
+                            //const uid = user.uid;
+                            //console.log("id",uid,"user",user)
+                            // ...
+                            //this.user = user;
+                            resolve(user)
+                        } else {
+                            // User is signed out
+                            // ...
+                            resolve(null);
+                        }
+                    },
+                    error=>reject(error));
+                    subscribe();                   
+                }
+            );
         }
     },
-    getters:{
+    getters: {
         /**
          * Propiedad que retorna un String vacío si la propiedad "user" del state se encuentra vacía (no ha sesión abierta)
          * @param {Object} state - La propiedad "state" de Pinia
          * @returns {String|Object} - state.user - {uid,email,emailVerified,isAnonymous,providerData,stsTokenManager,createdAt,lastLoginAt,apiKey,appName}
          */
-        getUser: (state) => state.user===null?'':state.user,
+        getUser: (state) => state.user === null ? '' : state.user,
         /**
          * 
          * @param {Object} state 
          * @returns {String} - Retorna el email si existe la propiedad o vacío
          */
-        getUserEmail: (state) => state.user!==null && state.user.email?state.user.email:'',       
+        getUserEmail: (state) => state.user !== null && state.user.email ? state.user.email : '',
+        isLogged: (state) => state.user!==null && state.user.uid.length
     }
 });

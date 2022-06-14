@@ -4,7 +4,7 @@
         <div class="home content is-medium p-5">
             <h1 class="title has-text-centered">Portafolio</h1>
             <TheMessage :errorOutput="errores"></TheMessage>
-            <div class="m-3">
+            <div class="m-3" v-if="store.isLogged">
                 <TheUploader @file-emit="fileEmit">
                     <div v-if="isLoading" class="loader is-loading"></div>
                     <span v-else>Cargar imagen ...</span>
@@ -41,6 +41,7 @@
 
 <script setup>
 import { useStoreProfile } from '../stores/profile';
+import { useStoreUsers } from '../stores/users';
 import { ref } from 'vue';
 import TheUploader from '@/components/TheUploader.vue';
 import TheMessage from '@/components/TheMessage.vue';
