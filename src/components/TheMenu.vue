@@ -9,7 +9,6 @@
                 @click.prevent="isActive = false"
                 class="navbar-item" 
                 to="/">
-                <div class="user">{{store?.getUserEmail}}</div>
                 <div class="logo"></div> 
             </RouterLink>
 
@@ -98,6 +97,9 @@
             </div>
 
             <div class="navbar-end">
+                <div class="navbar-item user">
+                    {{store?.getUserEmail}}
+                </div>
                 <div class="navbar-item">
                     <div class="buttons">
                         <!-- <a class="button is-primary">
