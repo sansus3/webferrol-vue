@@ -127,7 +127,7 @@
 //Libraries
 import {ref} from 'vue';
 import TheLogout from '@/components/login/TheLogout.vue';
-import { useStoreUsers } from '../stores/users';
+import { useStoreUsers } from '@/stores/users';
 const isActive = ref(false);
 const isHoverable = ref(false);//para la clase is-hoverable
 const navbarDropdownClose = () => {

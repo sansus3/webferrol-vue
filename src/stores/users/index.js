@@ -42,7 +42,7 @@ Autenticación de Firebase
          * Método que nos permite recargar la propiedad "user" del state en caso de refrescar la página.
          * @returns {null} -Retornamos null, es decir salimos del método en caso de que la propiedad user se encuentre cargada
          */
-        async logged() {
+        async onAuthState() {
             if (this.user !== null)
                 return;
             return new Promise(

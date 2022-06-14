@@ -6,7 +6,7 @@ import HomeView from '../views/HomeView.vue'
 // const PiniaUseStoreUsers = async () => {
 //   const store = useStoreUsers();
 //   store.loadingSession = true;
-//   await store.logged();
+//   await store.onAuthState();
 //   store.loadingSession = false;
 // }
 
