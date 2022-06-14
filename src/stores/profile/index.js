@@ -58,7 +58,7 @@ export const useStoreProfile = defineStore({
          * Cargamos un objeto de la collection "userProfile" y del document cuyo id es "userProfile"
          * @link https://firebase.google.com/docs/firestore/query-data/get-data?hl=es&authuser=0
          */
-        async getUserProfile() {
+        async setUserProfile() {
             if (this.userProfile !== null)
                 return;
             const docRef = doc(db, "userProfile", "userProfile");//docRef nos permite obtener un documento del que conocemos su dis

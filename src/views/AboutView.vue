@@ -59,7 +59,7 @@ const error = ref(false);
 (async () => {
   try {
     error.value = false;
-    await store.getUserProfile();
+    await store.setUserProfile();
     loaded.value = true;
     url.value = await store.getPhotoURL;
     loadedImg.value = true;

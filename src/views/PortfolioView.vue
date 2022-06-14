@@ -13,7 +13,7 @@
             <div v-if="store.portfolio.length" class="columns is-multiline">
                 <!-- Contenidos -->
                 <div class="column is-one-quarter" v-for="(src, index) in store.portfolio" :key="index">
-                    <img class="imgPortfolio" :src="src" alt="" @click="show(src)">
+                    <img class="imgPortfolio" :src="src" alt="" @click="showModal(src)">
                 </div>
                 <!-- Fin contenidos -->
             </div>
@@ -28,7 +28,7 @@
     </div>
     <Teleport to="body">
         <!-- use the modal component, pass in the prop -->
-        <TheModal :show="showModal" @close="showModal = false">
+        <TheModal :show="show" @close="show = false">
             <template #header>
                 <h3>Portafolio</h3>
             </template>
@@ -52,18 +52,31 @@ const store = useStoreProfile();
 const storeUsers = useStoreUsers();
 
 
-(async () => {
-    await store.setPortfolio();
-})();
+
 
 
 const errores = ref({ error: false });
 const isLoading = ref(false);
-const showModal = ref(false);
+const show = ref(false); //Booleano que abre o cierra una ventana modal
 const source = ref("");
 
-const show = src => {
-    showModal.value = true;
+
+
+try {
+    errores.value = { error: false };
+    store.setPortfolio();
+} catch (error) {
+    errores.value = {
+        error: true,
+        message: error.message
+    }
+}
+/**
+ * Función que carga una ventana modal
+ * @param {String} src - Ruta de la imagen que cargar en el modal
+ */
+const showModal = src => {
+    show.value = true;
     source.value = src;
 }
 
@@ -102,8 +115,9 @@ const fileEmit = async ([file]) => {//destructuring
         border-width: .8em;
     }
 }
-.imgPortfolio{
-    object-fit:cover;
+
+.imgPortfolio {
+    object-fit: cover;
     width: 100%;
     min-height: 400px;
     cursor: pointer;
