@@ -1,30 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import { useStoreUsers } from '../stores/users';
 
-const PiniaUseStoreUsers = async () => {
-  const store = useStoreUsers();
-  await store.logged();
-  //console.log(store.user)
-}
+//Ejemplo de lanzar el store de Pinia con el método beforeEnter
+//import { useStoreUsers } from '../stores/users';
+// const PiniaUseStoreUsers = async () => {
+//   const store = useStoreUsers();
+//   store.loadingSession = true;
+//   await store.logged();
+//   store.loadingSession = false;
+// }
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
-    }
+    //beforeEnter: PiniaUseStoreUsers,
   },
   {
     path: '/about',
     name: 'about',
     meta: {
       title: 'Acerca de Xurxo',
-    },
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
     },
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
@@ -37,9 +34,6 @@ const routes = [
     meta: {
       title: 'Portafolio',
     },
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
-    },
     component: () => import('../views/PortfolioView.vue')
   },
   {
@@ -51,9 +45,6 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '@/views/private/WorkExperienceView.vue')
     },
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
-    },
   },
   {
     path: '/new-experience',
@@ -63,9 +54,6 @@ const routes = [
     },
     component: function () {
       return import('@/views/backend/NewExperienceView.vue')
-    },
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
     },
   },
   {
@@ -78,9 +66,6 @@ const routes = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/SignInView.vue'),
-    beforeEnter: () => {
-      PiniaUseStoreUsers();
-    },
   }
 ]
 const router = createRouter({

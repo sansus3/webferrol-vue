@@ -12,6 +12,11 @@ export const useStoreUsers = defineStore({
          * @link https://firebase.google.com/docs/auth/web/manage-users?hl=es&authuser=0
          */
         user: null,
+        /**
+         * Variable que se carga y descarga en el intervalo en que se carga la sesión del usuario para realizar acciones por ejemplo en TheMenu.vue
+         * @type {Boolean} loadingSession
+         */
+        loadingSession: false
     }),
     actions: {
         /**
@@ -24,7 +29,6 @@ Autenticación de Firebase
             //console.log(email,password)
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             this.user = userCredential.user;
-            this.isLogged = true;
         },
         /**
          * Método que nos permite cerrar sesión de un usuario. Ver autentificación en el enlace de abajo.
@@ -41,7 +45,7 @@ Autenticación de Firebase
         async logged() {
             if (this.user !== null)
                 return;
-            this.user = await new Promise(
+            return new Promise(
                 (resolve, reject) => {
                     const subscribe = onAuthStateChanged(auth, (user) => {
                         if (user) {
@@ -50,7 +54,7 @@ Autenticación de Firebase
                             //const uid = user.uid;
                             //console.log("id",uid,"user",user)
                             // ...
-                            //this.user = user;
+                            this.user = user;
                             resolve(user)
                         } else {
                             // User is signed out
@@ -77,6 +81,6 @@ Autenticación de Firebase
          * @returns {String} - Retorna el email si existe la propiedad o vacío
          */
         getUserEmail: (state) => state.user !== null && state.user.email ? state.user.email : '',
-        isLogged: (state) => state.user!==null && state.user.uid.length
+        isLogged: (state) => state.user!==null && state.user.uid.length?true:false
     }
 });

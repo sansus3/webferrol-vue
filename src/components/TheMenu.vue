@@ -1,7 +1,8 @@
 <template>
-    <nav 
+    <nav
+        v-if="!store.loadingSession"
         class="navbar" 
-        :class="[store?.isLogged ? 'is-dark' : 'is-info']"
+        :class="[store.isLogged ? 'is-dark' : 'is-info']"
         role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <RouterLink
