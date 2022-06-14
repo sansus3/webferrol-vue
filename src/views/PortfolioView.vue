@@ -4,7 +4,7 @@
         <div class="home content is-medium p-5">
             <h1 class="title has-text-centered">Portafolio</h1>
             <TheMessage :errorOutput="errores"></TheMessage>
-            <div class="m-3" v-if="store.isLogged">
+            <div class="m-3" v-if="storeUsers.isLogged">
                 <TheUploader @file-emit="fileEmit">
                     <div v-if="isLoading" class="loader is-loading"></div>
                     <span v-else>Cargar imagen ...</span>
@@ -49,6 +49,7 @@ import TheModal from '@/components/TheModal.vue';
 import { uploadBlobFile } from '@/firebase.cloud.storage';
 
 const store = useStoreProfile();
+const storeUsers = useStoreUsers();
 
 
 (async () => {
