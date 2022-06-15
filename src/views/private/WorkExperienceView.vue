@@ -6,9 +6,12 @@
         <div class="column is-one-quarter" v-for="(item, key) in store.workExperiences" :key="key">
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
-                <p class="panel-heading">
-
+                <p class="panel-heading notification">
                     {{ item.code }}
+                    <button 
+                        @click="onDelete(item.ref)" 
+                        class="delete is-small"
+                    ></button>                   
                 </p>
                 <div class="panel-block">
 
@@ -72,6 +75,20 @@ const store = useStoreProfile();
         loading.value = false;
     }
 })()
+
+const onDelete = async ref => {
+    try {
+        errorOutput.error = false;
+        errorOutput.message = '';
+        await store.deleteWorkExperience(ref);
+        loading.value = true;
+    } catch (error) {
+        errorOutput.error = true;
+        errorOutput.message = error.message;
+    } finally{
+        loading.value = false;
+    }
+}
 </script>
 
 <style scoped>

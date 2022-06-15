@@ -1,15 +1,18 @@
 import { defineStore } from "pinia";
-import { getURL,listAllUrls } from '@/firebase.cloud.storage';
+import { getURL, listAllUrls } from '@/firebase.cloud.storage';
 import { db } from "@/firebase";
-import { collection, 
-         getDocs,
-         setDoc,
-         doc,
-         getDoc,
-         onSnapshot,
-         query, 
-         orderBy,
-         limit} from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    doc,
+    getDoc,
+    onSnapshot,
+    deleteDoc,
+    query,
+    orderBy,
+    limit
+} from "firebase/firestore";
 
 
 export const useStoreProfile = defineStore({
@@ -35,8 +38,8 @@ export const useStoreProfile = defineStore({
         /**
          * Cargamos en la propieda portfolio las urls de las imágenes que se encuentran en Cloud Store de la ruta "proyectos"
          */
-        async setPortfolio(){
-            if(this.portfolio.length===0)
+        async setPortfolio() {
+            if (this.portfolio.length === 0)
                 this.portfolio = await await listAllUrls('proyectos');
         },
         /**
@@ -49,10 +52,15 @@ export const useStoreProfile = defineStore({
                 return;
             const col = collection(db, "workExperience");
             onSnapshot(col);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
-            const q = query(col, orderBy("dateStart"),limit(20));
+            const q = query(col, orderBy("dateStart"), limit(20));
             const querySnapshot = await getDocs(q);
             //console.log(querySnapshot.docs) //Retorna un array de documentos Firestore
-            this.workExperiences = querySnapshot.docs.map(doc => doc.data());//Insertamos cada objeto de datos en el array 
+            this.workExperiences = querySnapshot.docs.map(doc => {
+                return {
+                    ref: doc.id,
+                    ...doc.data()
+                }
+            });//Insertamos cada objeto de datos en el array 
         },
         /**
          * Cargamos un objeto de la collection "userProfile" y del document cuyo id es "userProfile"
@@ -67,7 +75,15 @@ export const useStoreProfile = defineStore({
             if (docSnap.exists()) {
                 this.userProfile = docSnap.data();
                 //console.log(docSnap.id,docSnap.data());
-            }   
+            }
+        },
+        /**
+         * Para borrar un documento
+         * @param {String} ref Identificador del document de la colection wordExperience a eliminar
+         */
+        async deleteWorkExperience(ref){
+            await deleteDoc(doc(db, "workExperience", ref));
+            this.workExperiences = this.workExperiences.filter((item) => item.ref !== ref);
         },
         /**
          * Función en la que añadimos una nueva experiencia de usuario
@@ -81,7 +97,11 @@ export const useStoreProfile = defineStore({
                 const from = payment.dateStart.split('-');
                 payment.dateStart = new Date(from[0], Number(from[1]) - 1, from[2]);
             }
-            await setDoc(doc(db, "workExperience", `${Date.now()}`), payment);
+            // Add a new document with a generated id.
+            const docRef = await addDoc(collection(db, "workExperience"), {
+                ...payment
+            });
+            //console.log("Document written with ID: ", docRef.id);
         }
     },
     getters: {
@@ -121,6 +141,6 @@ export const useStoreProfile = defineStore({
          * @param {Object} state 
          * @returns {String} Retorna la url una imagen del Cloud Storage
          */
-        getPhotoURL: async state  => await getURL(state.userProfile!==null && state.userProfile.folder && state.userProfile.photo?`${state.userProfile.folder}/${state.userProfile.photo}`:'')
+        getPhotoURL: async state => await getURL(state.userProfile !== null && state.userProfile.folder && state.userProfile.photo ? `${state.userProfile.folder}/${state.userProfile.photo}` : '')
     }
 });

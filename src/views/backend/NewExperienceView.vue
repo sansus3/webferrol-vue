@@ -3,7 +3,7 @@
     <h1 class="title has-text-centered">
       Crear experiencia
     </h1>
-    <form action="#" id="myForm" @submit.prevent="insertExperience">
+    <form action="#" id="myForm" @submit.prevent="handleSubmit">
       <ul>
         <li class="field">
           <label for="code" class="label">Control*</label>
@@ -68,7 +68,7 @@
       </ul>
       <div class="has-text-centered">
         <TheMessage :errorOutput="errorOutput"></TheMessage>
-        <button :disabled="disabled" class="button is-link" :class="isLoading">Nueva experiencia</button>       
+        <button :disabled="disabled" class="button is-link" :class="spinner">Nueva experiencia</button>       
       </div>
     </form>
   </div>
@@ -76,6 +76,7 @@
 <script setup>
 import { reactive, computed } from 'vue';
 import { useStoreProfile } from '@/stores/profile';
+import { useRouter } from 'vue-router';
 import TheMessage from '../../components/TheMessage.vue';
 //Valores del formulario
 const form = reactive({
@@ -100,31 +101,33 @@ const errorOutput = reactive({
   error: false,
   message: ''
 });
-const isLoading = reactive({
+const spinner = reactive({
   'is-loading': false
 });
 const disabled = computed(() => !form.code.length || !form.jobTitle.length || !form.title.length || !form.place.length || !form.dateEnd.length);
 
 
 
-//Cargamos el store
+//Cargamos el store y router
 const store = useStoreProfile();
+const router = useRouter();
 
 
-const insertExperience = async () => {
+const handleSubmit = async () => {
   //Limpiamos los mensajes de error
   errorOutput.error = false;
   errorOutput.message = '';
   try {
-    isLoading['is-loading']=true;    
+    spinner['is-loading']=true;    
     await store.insertWorkExperience({...form});
     store.workExperiences = []; //Para cuando entremos en el array recargue el contenido
-    reloadForm();
+    reloadForm();    
+    router.push({name:'workexperience'});
   } catch (error) {
     errorOutput.error = true;
     errorOutput.message = error.message;
   } finally {
-    isLoading['is-loading']=false;
+    spinner['is-loading']=false;
   }
 }
 </script>
