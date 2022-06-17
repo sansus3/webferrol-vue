@@ -1,8 +1,15 @@
 <template>
     <div class="section work-experience columns is-multiline">
+        <div class="column is-full">
+            <ThePagination 
+                @handleNext="onNextClick"
+                @handlePrevious="onPreviousClick"
+                :nextDisabled="store.nextDisabled"
+                :previousDisabled="store.nextDisabled"></ThePagination>
+        </div>
         <div v-if="errorOutput.error" class="column title has-text-centered notification is-danger">
             {{ errorOutput.message }}
-        </div>
+        </div>        
         <div class="column is-one-quarter" v-for="(item, key) in store.workExperiences" :key="key">
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
@@ -51,6 +58,7 @@
 //Dependencies
 import { useStoreProfile } from '@/stores/profile';
 import { ref, reactive } from 'vue';
+import ThePagination from '@/components/ThePagination.vue';
 //hook de funciones
 import { getDayMonthFullYear } from "@/hooks/getters";
 //Variables
@@ -65,7 +73,7 @@ const store = useStoreProfile();
 (async () => {
     try {
         loading.value = true;
-        await store.getExperiences();        
+        await store.setExperiences();        
     } catch (error) {
         console.log('Error en fichero WorkExperience.ve', error);
         errorOutput.error = true;
@@ -76,6 +84,14 @@ const store = useStoreProfile();
     }
 })()
 
+//Paginación
+const onNextClick = async () => {
+    await store.setNextExperiences();
+}
+const onPreviousClick = async () => {
+    await store.setPreviousExperiences();
+}
+//Eliminación
 const onDelete = async ref => {
     try {
         errorOutput.error = false;

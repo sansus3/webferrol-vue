@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { getURL, listAllUrls } from '@/firebase.cloud.storage';
+import { nextPage,previousPage } from "@/hooks/pagination.firestore";
 import { db } from "@/firebase";
 import {
     collection,
@@ -27,6 +28,7 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
+        limit: 6,
         /**
          * Propiedad donde almacenamos información personal de usuario
          * @type {Object|null} userProfile - {name, firstSurname, secondSurname, birth, whoami}
@@ -47,14 +49,48 @@ export const useStoreProfile = defineStore({
          * @link https://firebase.google.com/docs/firestore/query-data/get-data?hl=es&authuser=0
          * @link https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/map
          */
-        async getExperiences() {
+        async setExperiences() {
             if (this.workExperiences.length)
-                return;
-            const col = collection(db, "workExperience");
-            onSnapshot(col);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
-            const q = query(col, orderBy("dateStart"), limit(20));
+                return; 
+            const q = query(collection(db, "workExperience"), orderBy("dateStart"), limit(this.limit));
             const querySnapshot = await getDocs(q);
+            this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
+            
             //console.log(querySnapshot.docs) //Retorna un array de documentos Firestore
+            this.workExperiences = querySnapshot.docs.map(doc => {
+                return {
+                    ref: doc.id,
+                    ...doc.data()
+                }
+            });//Insertamos cada objeto de datos en el array 
+        },
+        async setNextExperiences() {            
+            if(!this.workExperiences.length)
+                return;
+            //Obtenemos el último documento del array                               
+            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[this.workExperiences.length-1].ref));
+            //console.log(lastWorkExperiences)
+            
+           
+            // Construct a new query starting at this document
+            const querySnapshot = await nextPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
+
+            this.workExperiences = querySnapshot.docs.map(doc => {
+                return {
+                    ref: doc.id,
+                    ...doc.data()
+                }
+            });//Insertamos cada objeto de datos en el array 
+
+            
+        },
+        async setPreviousExperiences() {
+            //console.log(this.lastWorkExperiences.id);
+            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[0].ref));
+           
+            // Construct a new query starting at this document
+            const querySnapshot = await previousPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
+
             this.workExperiences = querySnapshot.docs.map(doc => {
                 return {
                     ref: doc.id,
