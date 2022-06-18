@@ -28,7 +28,9 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
-        limit: 6,
+        limit: 4, //Items por página
+        total: 0,
+        actualPage: 1, //contador 
         /**
          * Propiedad donde almacenamos información personal de usuario
          * @type {Object|null} userProfile - {name, firstSurname, secondSurname, birth, whoami}
@@ -43,6 +45,11 @@ export const useStoreProfile = defineStore({
         async setPortfolio() {
             if (this.portfolio.length === 0)
                 this.portfolio = await await listAllUrls('proyectos');
+        },
+        async setTotalExperiences(){
+            const q = query(collection(db, "workExperience"), orderBy("dateStart"));
+            const querySnapshot = await getDocs(q);
+            this.total = querySnapshot.size;
         },
         /**
          * Cargamos un array de objetos (documents) de la collection "workExperience"
@@ -67,6 +74,7 @@ export const useStoreProfile = defineStore({
         async setNextExperiences() {            
             if(!this.workExperiences.length)
                 return;
+            this.actualPage++;
             //Obtenemos el último documento del array                               
             const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[this.workExperiences.length-1].ref));
             //console.log(lastWorkExperiences)
@@ -85,6 +93,7 @@ export const useStoreProfile = defineStore({
             
         },
         async setPreviousExperiences() {
+            this.actualPage--;
             //console.log(this.lastWorkExperiences.id);
             const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[0].ref));
            

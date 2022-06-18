@@ -4,8 +4,11 @@
             <ThePagination 
                 @handleNext="onNextClick"
                 @handlePrevious="onPreviousClick"
-                :nextDisabled="store.nextDisabled"
-                :previousDisabled="store.nextDisabled"></ThePagination>
+                :perPage="store.limit"
+                :actualPage="store.actualPage"
+                :total="store.total"
+                :nextDisabled="false"
+                :previousDisabled="false"></ThePagination>
         </div>
         <div v-if="errorOutput.error" class="column title has-text-centered notification is-danger">
             {{ errorOutput.message }}
@@ -73,6 +76,7 @@ const store = useStoreProfile();
 (async () => {
     try {
         loading.value = true;
+        await store.setTotalExperiences();
         await store.setExperiences();        
     } catch (error) {
         console.log('Error en fichero WorkExperience.ve', error);
