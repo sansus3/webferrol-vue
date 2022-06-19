@@ -5,7 +5,7 @@
         <ul class="pagination-list">
             <li v-for="i in pages" :key="i">
                 <a v-if="actualPage===i" class="pagination-link is-current" :aria-label="`Page ${i}`" aria-current="page">{{i}}</a>
-                <a v-else class="pagination-link" :aria-label="`Goto page ${i}`">{{i}}</a>
+                <a @click="onPaginationLink(i)" v-else class="pagination-link" :aria-label="`Goto page ${i}`">{{i}}</a>
             </li>
         </ul>
     </nav>
@@ -44,7 +44,7 @@ const props = defineProps({
 
 const pages = computed(()=>Math.ceil(props.total/props.perPage));
 
-const emits = defineEmits(['handleNext','handlePrevious']);
+const emits = defineEmits(['handleNext','handlePrevious','handlePaginationLink']);
 
 const onNextClick = () => {
     if(props.actualPage!==pages.value)
@@ -53,5 +53,9 @@ const onNextClick = () => {
 const onPreviousClick = () => {
     if(props.actualPage!==1)
         emits('handlePrevious')
+}
+
+const onPaginationLink = page => {
+    emits('handlePaginationLink',page)
 }
 </script>

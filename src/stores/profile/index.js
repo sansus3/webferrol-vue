@@ -28,7 +28,7 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
-        limit: 4, //Items por página
+        limit: 2, //Items por página
         total: 0,
         actualPage: 1, //contador 
         /**
@@ -90,6 +90,25 @@ export const useStoreProfile = defineStore({
                 }
             });//Insertamos cada objeto de datos en el array 
 
+            
+        },
+        async setPaginationExperiences(page){
+            const newLimit = page*this.limit;
+            const q = query(collection(db, "workExperience"), orderBy("dateStart"), limit(newLimit));
+            let querySnapshot = await getDocs(q);
+            const index = this.limit*page;
+            const last = querySnapshot.docs[index-1];
+            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), last.id));
+            //this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
+            // Construct a new query starting at this document
+            querySnapshot = await nextPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
+            this.actualPage = page;
+            this.workExperiences = querySnapshot.docs.map(doc => {
+                return {
+                    ref: doc.id,
+                    ...doc.data()
+                }
+            });//Insertamos cada objeto de datos en el array 
             
         },
         async setPreviousExperiences() {

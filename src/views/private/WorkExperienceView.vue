@@ -4,6 +4,7 @@
             <ThePagination 
                 @handleNext="onNextClick"
                 @handlePrevious="onPreviousClick"
+                @handlePaginationLink="onPaginationLink"
                 :perPage="store.limit"
                 :actualPage="store.actualPage"
                 :total="store.total"
@@ -94,6 +95,9 @@ const onNextClick = async () => {
 }
 const onPreviousClick = async () => {
     await store.setPreviousExperiences();
+}
+const onPaginationLink = async page => {
+    await store.setPaginationExperiences(page);
 }
 //Eliminación
 const onDelete = async ref => {
