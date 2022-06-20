@@ -1,28 +1,24 @@
 <template>
     <div class="section work-experience columns is-multiline">
+       <!-- The Loader -->
+       <TheLoader :is-active="loader"></TheLoader>
+       <!--Pagination-->
         <div class="column is-full">
-            <ThePagination 
-                @handleNext="onNextClick"
-                @handlePrevious="onPreviousClick"
-                @handlePaginationLink="onPaginationLink"
-                :perPage="store.limit"
-                :actualPage="store.actualPage"
-                :total="store.total"
-                :nextDisabled="false"
-                :previousDisabled="false"></ThePagination>
+            <ThePagination @handleNext="onNextClick" @handlePrevious="onPreviousClick"
+                @handlePaginationLink="onPaginationLink" :perPage="store.limit" :actualPage="store.actualPage"
+                :total="store.total" :nextDisabled="false" :previousDisabled="false"></ThePagination>
+
         </div>
+
         <div v-if="errorOutput.error" class="column title has-text-centered notification is-danger">
             {{ errorOutput.message }}
-        </div>        
+        </div>
         <div class="column is-one-quarter" v-for="(item, key) in store.workExperiences" :key="key">
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
                 <p class="panel-heading notification">
                     {{ item.code }}
-                    <button 
-                        @click="onDelete(item.ref)" 
-                        class="delete is-small"
-                    ></button>                   
+                    <button @click="onDelete(item.ref)" class="delete is-small"></button>
                 </p>
                 <div class="panel-block">
 
@@ -54,19 +50,20 @@
         </div>
         <!-- <pre>
             {{data}}
-        </pre> -->        
+        </pre> -->
     </div>
 </template>
 
 <script setup>
 //Dependencies
 import { useStoreProfile } from '@/stores/profile';
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import ThePagination from '@/components/ThePagination.vue';
+import TheLoader from '@/components/TheLoader.vue';
 //hook de funciones
 import { getDayMonthFullYear } from "@/hooks/getters";
 //Variables
-const loading = ref(false);
+const loader = reactive({'is-active':false });
 const errorOutput = reactive({
     error: false,
     message: ''
@@ -76,53 +73,76 @@ const store = useStoreProfile();
 //Lanzamos la promesa
 (async () => {
     try {
-        loading.value = true;
+        loader['is-active'] = true;
         await store.setTotalExperiences();
-        await store.setExperiences();        
+        await store.setExperiences();
     } catch (error) {
         console.log('Error en fichero WorkExperience.ve', error);
         errorOutput.error = true;
         errorOutput.message = error.message;
 
     } finally {
-        loading.value = false;
+        loader['is-active'] = false;
     }
 })()
 
 //Paginación
 const onNextClick = async () => {
-    await store.setNextExperiences();
+    try {
+        loader['is-active'] = true;
+        await store.setNextExperiences();
+    } catch (error) {
+        errorOutput.error = true;
+        errorOutput.message = error.message;
+    } finally {
+        loader['is-active'] = false;
+    }
+
 }
 const onPreviousClick = async () => {
-    await store.setPreviousExperiences();
+    try {
+        loader['is-active'] = true;
+        await store.setPreviousExperiences();
+    } catch (error) {
+        errorOutput.error = true;
+        errorOutput.message = error.message;
+    } finally {
+        loader['is-active'] = false;
+    }
 }
 const onPaginationLink = async page => {
-    await store.setPaginationExperiences(page);
+    try {
+        loader['is-active'] = true;
+        await store.setPaginationExperiences(page);
+    } catch (error) {
+        errorOutput.error = true;
+        errorOutput.message = error.message;
+    } finally {
+        loader['is-active'] = false;
+    }
 }
 //Eliminación
 const onDelete = async ref => {
     try {
-        errorOutput.error = false;
+        loader['is-active'] = true;
         errorOutput.message = '';
         await store.deleteWorkExperience(ref);
-        loading.value = true;
+        loader['is-active'] = false;
     } catch (error) {
         errorOutput.error = true;
         errorOutput.message = error.message;
-    } finally{
-        loading.value = false;
+    } finally {
+        loader['is-active'] = false;
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 ol.list>li:nth-child(2) {
     background-color: rgb(234, 237, 237);
 }
 
-.container_spinner {
-    text-align: center;
-    font-size: 20vw;
-    color: orange
+.work-experience{
+    position: relative;   
 }
 </style>

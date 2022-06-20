@@ -94,10 +94,17 @@ export const useStoreProfile = defineStore({
         },
         async setPaginationExperiences(page){
             const newLimit = page*this.limit;
+            const index = (this.limit*page)-this.limit-1;
+            if(index<0){
+                this.workExperiences = [];
+                this.actualPage = page;
+                await this.setExperiences();
+                return;
+            }
             const q = query(collection(db, "workExperience"), orderBy("dateStart"), limit(newLimit));
             let querySnapshot = await getDocs(q);
-            const index = this.limit*page;
-            const last = querySnapshot.docs[index-1];
+            
+            const last = querySnapshot.docs[index];
             const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), last.id));
             //this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
             // Construct a new query starting at this document
