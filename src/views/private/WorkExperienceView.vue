@@ -1,8 +1,8 @@
 <template>
     <div class="section work-experience columns is-multiline">
-       <!-- The Loader -->
-       <TheLoader :is-active="loader"></TheLoader>
-       <!--Pagination-->
+        <!-- The Loader -->
+        <TheLoader :is-active="loader"></TheLoader>
+        <!--Pagination-->
         <div class="column is-full">
             <ThePagination @handleNext="onNextClick" @handlePrevious="onPreviousClick"
                 @handlePaginationLink="onPaginationLink" :perPage="store.limit" :actualPage="store.actualPage"
@@ -52,22 +52,45 @@
             {{data}}
         </pre> -->
     </div>
+    <Teleport to="body">
+        <!-- use the modal component, pass in the prop -->
+        <TheModal :show="show" @close="show = false">
+            <template #header>
+                <h3>Experiencias</h3>
+            </template>
+            <template #body>
+                <div class="notification is-danger">
+                    ¿Desea eliminar esta experiencia?
+                </div>
+            </template>
+            <template #footer>
+                Eliminar
+                <button class="button is-info modal-default-button ml-5" @click="show = false">Cancelar</button>
+                <button class="button is-danger modal-default-button" @click="handleOK">Confirmar</button>
+
+            </template>
+        </TheModal>
+    </Teleport>
 </template>
 
 <script setup>
 //Dependencies
 import { useStoreProfile } from '@/stores/profile';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import ThePagination from '@/components/ThePagination.vue';
 import TheLoader from '@/components/TheLoader.vue';
+import TheModal from '@/components/TheModal.vue';
 //hook de funciones
 import { getDayMonthFullYear } from "@/hooks/getters";
+import { async } from '@firebase/util';
 //Variables
-const loader = reactive({'is-active':false });
+const loader = reactive({ 'is-active': false });
 const errorOutput = reactive({
     error: false,
     message: ''
 });
+const show = ref(false);
+const id = ref(null);
 //lanzamos el store
 const store = useStoreProfile();
 //Lanzamos la promesa
@@ -122,17 +145,24 @@ const onPaginationLink = async page => {
     }
 }
 //Eliminación
-const onDelete = async ref => {
+const onDelete = ref => {
+    errorOutput.message = '';
+    show.value = true;
+    id.value = ref;
+}
+const handleOK = async () => {
     try {
-        loader['is-active'] = true;
-        errorOutput.message = '';
-        await store.deleteWorkExperience(ref);
+        if(id.value===null)
+            throw new Error("Identificador vacío");
+        await store.deleteWorkExperience(id.value);
         loader['is-active'] = false;
+        id.value = null;
     } catch (error) {
         errorOutput.error = true;
         errorOutput.message = error.message;
     } finally {
         loader['is-active'] = false;
+        show.value = false;
     }
 }
 </script>
@@ -142,7 +172,7 @@ ol.list>li:nth-child(2) {
     background-color: rgb(234, 237, 237);
 }
 
-.work-experience{
-    position: relative;   
+.work-experience {
+    position: relative;
 }
 </style>
