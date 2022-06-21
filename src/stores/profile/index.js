@@ -155,6 +155,10 @@ export const useStoreProfile = defineStore({
         async deleteWorkExperience(ref){
             await deleteDoc(doc(db, "workExperience", ref));
             this.workExperiences = this.workExperiences.filter((item) => item.ref !== ref);
+            this.workExperiences = [];            
+            await this.setTotalExperiences();
+            await this.setExperiences();
+            this.actualPage = 1;
         },
         /**
          * Función en la que añadimos una nueva experiencia de usuario

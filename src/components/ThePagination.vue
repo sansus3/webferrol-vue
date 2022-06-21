@@ -32,14 +32,6 @@ const props = defineProps({
         type: Number,
         default: 2,
     },
-    nextDisabled: {
-        type: Boolean,
-        default: false,
-    },
-    previousDisabled: {
-        type: Boolean,
-        default: false,
-    }
 });
 
 const pages = computed(()=>Math.ceil(props.total/props.perPage));
@@ -59,3 +51,9 @@ const onPaginationLink = page => {
     emits('handlePaginationLink',page)
 }
 </script>
+
+<style scoped>
+.is-current{
+    cursor: auto;
+}
+</style>

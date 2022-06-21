@@ -6,7 +6,7 @@
         <div class="column is-full">
             <ThePagination @handleNext="onNextClick" @handlePrevious="onPreviousClick"
                 @handlePaginationLink="onPaginationLink" :perPage="store.limit" :actualPage="store.actualPage"
-                :total="store.total" :nextDisabled="false" :previousDisabled="false"></ThePagination>
+                :total="store.total"></ThePagination>
 
         </div>
 

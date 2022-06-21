@@ -37,10 +37,11 @@ const routes = [
     component: () => import('../views/PortfolioView.vue')
   },
   {
-    path: '/workexperience',
-    name: 'workexperience',
+    path: '/workexperiences',
+    name: 'workexperiences',
     meta: {
       title: 'Experiencias',
+      protectedRoute: true,
     },
     component: function () {
       return import(/* webpackChunkName: "about" */ '@/views/private/WorkExperienceView.vue')
@@ -51,6 +52,7 @@ const routes = [
     name: 'newexperience',
     meta: {
       title: 'Nueva experiencia',
+      protectedRoute: true,
     },
     component: function () {
       return import('@/views/backend/NewExperienceView.vue')
@@ -75,7 +77,13 @@ const router = createRouter({
 
 router.beforeEach((to,from,next)=>{
   window.document.title = to.meta.title?to.meta.title:'WebFerrol';
-  next();
+  //console.log(window.localStorage.getItem("user"))
+  if(to.meta.protectedRoute===true && window.localStorage.getItem("user")===null){
+    next('/sign-in');
+  }else{
+    next();
+  }
+  
 });
 
 export default router

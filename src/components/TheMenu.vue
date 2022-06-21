@@ -53,7 +53,7 @@
                         <RouterLink
                             @click.prevent="navbarDropdownClose"                            
                             class="navbar-item" 
-                            :to="{name:'workexperience'}">
+                            :to="{name:'workexperiences'}">
                             Experiencia laboral
                         </RouterLink>  
                         <hr class="navbar-divider">                      

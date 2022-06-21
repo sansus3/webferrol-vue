@@ -122,7 +122,7 @@ const handleSubmit = async () => {
     await store.insertWorkExperience({...form});
     store.workExperiences = []; //Para cuando entremos en el array recargue el contenido
     reloadForm();    
-    router.push({name:'workexperience'});
+    router.push({name:'workexperiences'});
   } catch (error) {
     errorOutput.error = true;
     errorOutput.message = error.message;
