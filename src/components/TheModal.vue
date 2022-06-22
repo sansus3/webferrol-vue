@@ -22,8 +22,9 @@ const props = defineProps({
 
           <div class="modal-footer">
             <slot name="footer">
-              WebFerrol.com
-              <button class="button is-info modal-default-button" @click="$emit('close')">Cerrar</button>
+              <div class="section">
+                <button class="button is-small is-info modal-default-button" @click="$emit('close')">Cerrar</button>
+              </div>
             </slot>
           </div>
         </div>

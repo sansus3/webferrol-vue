@@ -53,18 +53,19 @@
         <!-- use the modal component, pass in the prop -->
         <TheModal :show="show" @close="show = false">
             <template #header>
-                <h3>Experiencias</h3>
+                <div class="columns">
+                    <div class="column has-text-right">
+                        <button class="button is-rounded is-small is-default" @click="show = false">X</button>
+                    </div>
+                </div>
             </template>
             <template #body>
                 <div class="notification is-danger">
                     ¿Desea eliminar esta experiencia <strong>{{experience?.jobTitle}}</strong> (código: {{experience?.code}})"?
                 </div>
             </template>
-            <template #footer>
-                Eliminar
-                <button class="button is-info modal-default-button ml-5" @click="show = false">Cancelar</button>
-                <button class="button is-danger modal-default-button" @click="handleOK">Confirmar</button>
-
+            <template #footer>                
+                 <div class="section"><button class="button is-small is-danger modal-default-button" @click="handleOK">Confirmar</button></div>
             </template>
         </TheModal>
     </Teleport>
