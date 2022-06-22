@@ -7,8 +7,8 @@
       <h1 class="title has-text-centered">Cloud Storage</h1>
       <div class="columns is-multiline">
         <!-- Contenidos -->
-        <div v-if="files.length" class="column is-one-quarter" v-for="(src, index) in files" :key="index">
-          <img style="object-fit:cover; width: 100%;min-height: 400px;" :src="src" :alt="`Proyecto ${index + 1}`">
+        <div v-if="files.length" class="column is-one-quarter" v-for="item in files" :key="item.ref">
+          <img style="object-fit:cover; width: 100%;min-height: 400px;" :src="item.url" :alt="`Referencia: ${item.ref}`">
         </div>
         <div v-else class="column">
           <div class="content loader-wrapper">

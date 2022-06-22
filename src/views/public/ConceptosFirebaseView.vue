@@ -27,7 +27,7 @@
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-success">
                             <div class="content">
-                                <p class="title">Firebase: Storage</p>
+                                <p class="title">Cloud Storage</p>
                                 <a class="subtitle"
                                     href="https://firebase.google.com/docs/storage/web/start?hl=es&authuser=0"
                                     target="_blank">

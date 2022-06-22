@@ -1,5 +1,5 @@
 import { storage } from "@/firebase";
-import { ref, getDownloadURL, listAll, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL, listAll, uploadBytes, deleteObject } from "firebase/storage";
 
 
 
@@ -40,12 +40,24 @@ export const listAllUrls = async (url = 'gs://curriculum-vitae-xurxo.appspot.com
     // Find all the prefixes and items.
     const results = await listAll(listRef);
     const { items } = results;
-    return await Promise.all(
-        items.map((item) => getDownloadURL(item))
+    return Promise.all(
+        
+        items.map(
+            async (item) => ({ref: item._location.path_,url:await getDownloadURL(item)})
+        )
     );
 }
 
-
+/**
+ * Función para eliminar un fichero en firebase
+ * @param {String} fileRef reference to the file to delete
+ */
+export const deleteFile = async (fileRef='images/desert.jpg') => {
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, fileRef);
+    // Delete the file
+    await deleteObject(desertRef);
+}
 
 
 

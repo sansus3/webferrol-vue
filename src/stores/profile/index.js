@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getURL, listAllUrls } from '@/firebase.cloud.storage';
+import { getURL, listAllUrls,deleteFile } from '@/firebase.cloud.storage';
 import { initPage,nextPage,previousPage,totalPages } from "@/hooks/pagination.firestore";
 import { db } from "@/firebase";
 import {
@@ -45,6 +45,9 @@ export const useStoreProfile = defineStore({
         async setPortfolio() {
             if (this.portfolio.length === 0)
                 this.portfolio = await await listAllUrls('proyectos');
+        },
+        async deletePortfolio(ref){
+            await deleteFile(ref);
         },
         /**
          * Función para almacenar el total de páginas de las experiencias ordenadas por fecha de inicio

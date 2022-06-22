@@ -12,8 +12,8 @@
             </div>
             <div v-if="store.portfolio.length" class="columns is-multiline">
                 <!-- Contenidos -->
-                <div class="column is-one-quarter" v-for="(src, index) in store.portfolio" :key="index">
-                    <img class="imgPortfolio" :src="src" alt="" @click="showModal(src)">
+                <div class="column is-one-quarter" v-for="(item, index) in store.portfolio" :key="index">
+                    <img class="imgPortfolio" :src="item.url" alt="" @click="showModal({ ref: item.ref, url: item.url })">
                 </div>
                 <!-- Fin contenidos -->
             </div>
@@ -30,7 +30,12 @@
         <!-- use the modal component, pass in the prop -->
         <TheModal :show="show" @close="show = false">
             <template #header>
-                <h3>Portafolio</h3>
+                <div class="columns">
+                    <h3 class="column">Portafolio</h3>
+                    <div class="column has-text-right" v-if="storeUsers.isLogged">
+                        <button class="button is-small is-danger" @click="handleDelete">Eliminar</button>
+                    </div>
+                </div>
             </template>
             <template #body>
                 <img style="width: 100%;height: 60vh;object-fit: contain;" :src="source" alt="">
@@ -59,6 +64,7 @@ const errores = ref({ error: false });
 const isLoading = ref(false);
 const show = ref(false); //Booleano que abre o cierra una ventana modal
 const source = ref("");
+let item = null;
 
 
 
@@ -75,9 +81,34 @@ try {
  * Función que carga una ventana modal
  * @param {String} src - Ruta de la imagen que cargar en el modal
  */
-const showModal = src => {
+const showModal = ({ ref, url }) => {
     show.value = true;
-    source.value = src;
+    source.value = url;
+    item = { ref, url }
+}
+
+const handleDelete = async () => {
+    //console.log(item);
+    if (!item)
+        return;
+    try {
+        errores.value = { error: false };
+        isLoading.value = true;
+        await store.deletePortfolio(item.ref);
+        store.portfolio = [];
+        await store.setPortfolio();
+        item = null;
+    } catch (error) {
+        errores.value = {
+            error: true,
+            message: error.message
+        }
+    } finally {
+        isLoading.value = false;
+        show.value = false;
+        source.value = '';
+    }
+
 }
 
 const fileEmit = async ([file]) => {//destructuring
@@ -91,7 +122,7 @@ const fileEmit = async ([file]) => {//destructuring
             store.setPortfolio();//recarga de fotos
             //console.log(snapshot)
         } catch (error) {
-            console.log(error);
+            //console.log(error);
             errores.value = {
                 error: true,
                 message: error.message
