@@ -61,6 +61,7 @@ Autenticación de Firebase
                         } else {
                             // User is signed out
                             // ...
+                            window.localStorage.removeItem("user");
                             resolve(null);
                         }
                     },

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { getURL, listAllUrls } from '@/firebase.cloud.storage';
-import { nextPage,previousPage } from "@/hooks/pagination.firestore";
+import { initPage,nextPage,previousPage,totalPages } from "@/hooks/pagination.firestore";
 import { db } from "@/firebase";
 import {
     collection,
@@ -28,7 +28,7 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
-        limit: 2, //Items por página
+        limit: 12, //Items por página
         total: 0,
         actualPage: 1, //contador 
         /**
@@ -46,52 +46,62 @@ export const useStoreProfile = defineStore({
             if (this.portfolio.length === 0)
                 this.portfolio = await await listAllUrls('proyectos');
         },
+        /**
+         * Función para almacenar el total de páginas de las experiencias ordenadas por fecha de inicio
+         */
         async setTotalExperiences(){
-            const q = query(collection(db, "workExperience"), orderBy("dateStart"));
-            const querySnapshot = await getDocs(q);
-            this.total = querySnapshot.size;
+            this.total = await totalPages("workExperience");
+        },
+        overwriteWorkExperiences(querySnapshot){
+            //Carga del Array
+            this.workExperiences = querySnapshot.docs.map(doc => {
+                return {
+                    ref: doc.id,
+                    ...doc.data()
+                }
+            });
         },
         /**
-         * Cargamos un array de objetos (documents) de la collection "workExperience"
+         * Cargamos un array de objetos (documents) de la collection "workExperience" en la propiedad "workExperiences". Comienza aquí la sección de paginación
          * @link https://firebase.google.com/docs/firestore/query-data/get-data?hl=es&authuser=0
          * @link https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/map
          */
         async setExperiences() {
             if (this.workExperiences.length)
-                return; 
-            const q = query(collection(db, "workExperience"), orderBy("dateStart"), limit(this.limit));
-            const querySnapshot = await getDocs(q);
-            this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
-            
-            //console.log(querySnapshot.docs) //Retorna un array de documentos Firestore
-            this.workExperiences = querySnapshot.docs.map(doc => {
-                return {
-                    ref: doc.id,
-                    ...doc.data()
-                }
-            });//Insertamos cada objeto de datos en el array 
+                return;
+            const querySnapshot = await initPage("workExperience","dateStart",this.limit);
+            this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1]; 
+            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences
         },
+        /**
+         * Paginar la página posteriores de las experiencias laborales
+         */
         async setNextExperiences() {            
             if(!this.workExperiences.length)
                 return;
+            //Actualizamos índice de la página
             this.actualPage++;
             //Obtenemos el último documento del array                               
             const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[this.workExperiences.length-1].ref));
-            //console.log(lastWorkExperiences)
-            
-           
+            //console.log(lastWorkExperiences)   
             // Construct a new query starting at this document
-            const querySnapshot = await nextPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
-
-            this.workExperiences = querySnapshot.docs.map(doc => {
-                return {
-                    ref: doc.id,
-                    ...doc.data()
-                }
-            });//Insertamos cada objeto de datos en el array 
-
-            
+            const querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
+            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences   
         },
+        /**
+         * Paginar la página previas de las experiencias laborales
+         */
+        async setPreviousExperiences() {
+            this.actualPage--;
+            //console.log(this.lastWorkExperiences.id);
+            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[0].ref));           
+            // Construct a new query starting at this document
+            const querySnapshot = await previousPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
+            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences 
+        },
+         /**
+         * Paginar Una página concreta de las experiencias laborales
+         */
         async setPaginationExperiences(page){
             const newLimit = page*this.limit;
             const index = (this.limit*page)-this.limit-1;
@@ -108,30 +118,9 @@ export const useStoreProfile = defineStore({
             const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), last.id));
             //this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
             // Construct a new query starting at this document
-            querySnapshot = await nextPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
+            querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
             this.actualPage = page;
-            this.workExperiences = querySnapshot.docs.map(doc => {
-                return {
-                    ref: doc.id,
-                    ...doc.data()
-                }
-            });//Insertamos cada objeto de datos en el array 
-            
-        },
-        async setPreviousExperiences() {
-            this.actualPage--;
-            //console.log(this.lastWorkExperiences.id);
-            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[0].ref));
-           
-            // Construct a new query starting at this document
-            const querySnapshot = await previousPage(collection(db, "workExperience"),'dateStart',lastWorkExperiences,this.limit);
-
-            this.workExperiences = querySnapshot.docs.map(doc => {
-                return {
-                    ref: doc.id,
-                    ...doc.data()
-                }
-            });//Insertamos cada objeto de datos en el array 
+            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences    
         },
         /**
          * Cargamos un objeto de la collection "userProfile" y del document cuyo id es "userProfile"
@@ -144,8 +133,10 @@ export const useStoreProfile = defineStore({
             onSnapshot(docRef);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                this.userProfile = docSnap.data();
-                //console.log(docSnap.id,docSnap.data());
+                this.userProfile = {
+                    ref: docSnap.id,
+                    ...docSnap.data(),
+                }
             }
         },
         /**
@@ -174,6 +165,7 @@ export const useStoreProfile = defineStore({
             }
             // Add a new document with a generated id.
             const docRef = await addDoc(collection(db, "workExperience"), {
+                id: Date.now(),
                 ...payment
             });
             //console.log("Document written with ID: ", docRef.id);

@@ -18,7 +18,7 @@
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
                 <p class="panel-heading notification">
                     {{ item.code }}
-                    <button @click="onDelete(item.ref)" class="delete is-small"></button>
+                    <button @click="onDelete(item)" class="delete is-small"></button>
                 </p>
                 <div class="panel-block">
 
@@ -48,9 +48,6 @@
                 </div>
             </article>
         </div>
-        <!-- <pre>
-            {{data}}
-        </pre> -->
     </div>
     <Teleport to="body">
         <!-- use the modal component, pass in the prop -->
@@ -60,7 +57,7 @@
             </template>
             <template #body>
                 <div class="notification is-danger">
-                    ¿Desea eliminar esta experiencia?
+                    ¿Desea eliminar esta experiencia <strong>{{experience?.jobTitle}}</strong> (código: {{experience?.code}})"?
                 </div>
             </template>
             <template #footer>
@@ -82,7 +79,6 @@ import TheLoader from '@/components/TheLoader.vue';
 import TheModal from '@/components/TheModal.vue';
 //hook de funciones
 import { getDayMonthFullYear } from "@/hooks/getters";
-import { async } from '@firebase/util';
 //Variables
 const loader = reactive({ 'is-active': false });
 const errorOutput = reactive({
@@ -90,7 +86,7 @@ const errorOutput = reactive({
     message: ''
 });
 const show = ref(false);
-const id = ref(null);
+const experience = ref(null);
 //lanzamos el store
 const store = useStoreProfile();
 //Lanzamos la promesa
@@ -145,18 +141,19 @@ const onPaginationLink = async page => {
     }
 }
 //Eliminación
-const onDelete = ref => {
+const onDelete = item => {
     errorOutput.message = '';
     show.value = true;
-    id.value = ref;
+    experience.value = item;
 }
 const handleOK = async () => {
     try {
-        if(id.value===null)
+        if(experience.value===null)
             throw new Error("Identificador vacío");
-        await store.deleteWorkExperience(id.value);
+        //console.log(experience.value)
+        await store.deleteWorkExperience(experience.value.ref);
         loader['is-active'] = false;
-        id.value = null;
+        experience.value = null;
     } catch (error) {
         errorOutput.error = true;
         errorOutput.message = error.message;
