@@ -46,6 +46,7 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '@/views/private/WorkExperienceView.vue')
     },
+
   },
   {
     path: '/new-experience',
@@ -68,6 +69,17 @@ const routes = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/SignInView.vue'),
+  },
+  {
+    path: '/viewer',
+    name: 'viewer',
+    meta: {
+      title: 'Viewer Vue 3',
+    },
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../views/demos/ViewerView.vue'),
   }
 ]
 const router = createRouter({

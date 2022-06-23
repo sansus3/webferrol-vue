@@ -43,3 +43,7 @@ See [Dynamic Page Titles With The Vue 3 Router](https://www.youtube.com/watch?v=
 ## Generador de favicon
 
 See [Favicon Converter](https://favicon.io/favicon-converter/)
+
+## vue3-viewer
+
+See [vue3-viewer](https://github.com/mirari/vue3-viewer)
