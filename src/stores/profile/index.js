@@ -5,16 +5,14 @@ import { db } from "@/firebase";
 import {
     collection,
     getDocs,
-    addDoc,
     doc,
     getDoc,
-    onSnapshot,
-    deleteDoc,
     query,
     orderBy,
     limit
 } from "firebase/firestore";
 
+import { useDB } from "@/hooks/firestore";
 
 export const useStoreProfile = defineStore({
     /**
@@ -28,7 +26,7 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
-        limit: 12, //Items por página
+        limit: 1, //Items por página
         total: 0,
         actualPage: 1, //contador 
         /**
@@ -132,22 +130,18 @@ export const useStoreProfile = defineStore({
         async setUserProfile() {
             if (this.userProfile !== null)
                 return;
-            const docRef = doc(db, "userProfile", "userProfile");//docRef nos permite obtener un documento del que conocemos su dis
-            onSnapshot(docRef);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                this.userProfile = {
-                    ref: docSnap.id,
-                    ...docSnap.data(),
-                }
-            }
+            const {getDocument} = useDB('userProfile');
+            const {data,ref} =  await getDocument('userProfile');
+            this.userProfile = {...data,ref};
+            //console.log(this.userProfile)  
         },
         /**
          * Para borrar un documento
          * @param {String} ref Identificador del document de la colection wordExperience a eliminar
          */
         async deleteWorkExperience(ref){
-            await deleteDoc(doc(db, "workExperience", ref));
+            const {deleteDocument} = useDB('workExperience');
+            await deleteDocument(ref);
             this.workExperiences = this.workExperiences.filter((item) => item.ref !== ref);
             this.workExperiences = [];            
             await this.setTotalExperiences();
@@ -166,11 +160,8 @@ export const useStoreProfile = defineStore({
                 const from = payment.dateStart.split('-');
                 payment.dateStart = new Date(from[0], Number(from[1]) - 1, from[2]);
             }
-            // Add a new document with a generated id.
-            const docRef = await addDoc(collection(db, "workExperience"), {
-                id: Date.now(),
-                ...payment
-            });
+            const {addDocument} = useDB('workExperience');
+            return await addDocument(payment);
             //console.log("Document written with ID: ", docRef.id);
         }
     },
