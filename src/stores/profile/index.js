@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getURL, listAllUrls,deleteFile } from '@/firebase.cloud.storage';
+import { getURL, listAllUrls,deleteFile } from '@/hooks/firebase.cloud.storage';
 import { initPage,nextPage,previousPage,totalPages } from "@/hooks/pagination.firestore";
 import { db } from "@/firebase";
 import {

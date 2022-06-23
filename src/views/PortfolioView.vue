@@ -51,7 +51,7 @@ import { ref } from 'vue';
 import TheUploader from '@/components/TheUploader.vue';
 import TheMessage from '@/components/TheMessage.vue';
 import TheModal from '@/components/TheModal.vue';
-import { uploadBlobFile } from '@/firebase.cloud.storage';
+import { uploadBlobFile } from '@/hooks/firebase.cloud.storage';
 
 const store = useStoreProfile();
 const storeUsers = useStoreUsers();

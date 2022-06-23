@@ -75,27 +75,9 @@
                         </article>
                     </div>
                 </div>
-            </div>
-            <!-- Contenido 5 -->
+            </div>            
+             <!-- Contenido 5 -->
             <div class="column is-half">
-                <div class="tile is-ancestor">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-link">
-                            <div class="content">
-                                <p class="title">vue-fontawesome</p>
-                                <a class="subtitle" href="https://github.com/FortAwesome/vue-fontawesome"
-                                    target="_blank">
-                                    Font Awesome 5 Vue component using SVG with JS</a>
-                                <div class="content">
-                                    <!-- Content -->
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-            </div>
-             <!-- Contenido 6 -->
-            <div class="column is-full">
                 <div class="tile is-ancestor">
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-warning">
