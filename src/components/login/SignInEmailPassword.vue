@@ -41,7 +41,7 @@ const router = useRouter();
 const modal = reactive({error: true, message: 'Los campos con asterisco son obligatorios',title: 'Atención', class:'is-warning'});
 //Variables
 const form = reactive({
-    email: 'gonzaleztenreiro@gmail.com',
+    email: '',
     password: ''
 });
 

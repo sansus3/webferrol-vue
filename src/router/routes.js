@@ -1,0 +1,71 @@
+export const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: () => import('../views/HomeView.vue')
+    },
+    {
+        path: '/about',
+        name: 'about',
+        meta: {
+            title: 'Acerca de Xurxo',
+        },
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/AboutView.vue')
+    },
+    {
+        path: '/portfolio',
+        name: 'portfolio',
+        meta: {
+            title: 'Portafolio',
+        },
+        component: () => import('../views/PortfolioView.vue')
+    },
+    {
+        path: '/workexperiences',
+        name: 'workexperiences',
+        meta: {
+            title: 'Experiencias',
+            protectedRoute: true,
+        },
+        component: function () {
+            return import(/* webpackChunkName: "about" */ '@/views/private/WorkExperienceView.vue')
+        },
+
+    },
+    {
+        path: '/new-experience',
+        name: 'newexperience',
+        meta: {
+            title: 'Nueva experiencia',
+            protectedRoute: true,
+        },
+        component: function () {
+            return import('@/views/backend/NewExperienceView.vue')
+        },
+    },
+    {
+        path: '/sign-in',
+        name: 'singin',
+        meta: {
+            title: 'Log in',
+        },
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/SignInView.vue'),
+    },
+    {
+        path: '/viewer',
+        name: 'viewer',
+        meta: {
+            title: 'Viewer Vue 3',
+        },
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/demos/ViewerView.vue'),
+    }
+]
