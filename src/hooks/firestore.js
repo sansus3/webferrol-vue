@@ -83,7 +83,19 @@ export const useDB = collectionName => {
             loading.value = false;
         }
     }
-
     return {getDocument,addDocument,deleteDocument,loading}
 }
+
+/**
+ * Se pretende mapear el resultado de una consulta (query) y almacenarlos en un Array
+ * @param {Object} querySnapshot Los resultados de una Promise ¡ya resuelta!!! de tipo QuerySnapshot.
+ * @return {Array} Retorna un array con la propiedad id y el método data de un objeto doc de Firestore
+ */
+export const getDocsArray = querySnapshot => 
+querySnapshot.docs.map(doc => {
+    return {
+        ref: doc.id,
+        ...doc.data()
+    }
+});
 

@@ -2,11 +2,13 @@ import { db } from "@/firebase";
 import { 
     orderBy,
     collection,
+    doc,
     startAfter,
     limit,
     limitToLast, 
     query, 
-    getDocs, 
+    getDocs,
+    getDoc,
     endBefore } from "firebase/firestore";
 /**
  * 
@@ -52,10 +54,31 @@ export const nextPage = async (collectionRef,field,lastDocSnap,pageSize) =>
 /**
  * 
  * @param {String} collectionRef - Referencia a un colleción de firestore collection()
+ * @param {String} field - Campo por el que se ordenará la consulta
+ * @param {Number} end - Límite de página a donde ir 
+ * @returns QuerySnapshot
+ */
+ export const limitPage = async (collectionRef,field,end) => 
+ await getDocs(query(
+     collection(db,collectionRef),
+     orderBy(field),
+     limit(end)));
+/**
+ * 
+ * @param {String} collectionRef - Referencia a un colleción de firestore collection()
  * @param {Number}  - Número de registros
  */
 export const totalPages = async (collectionRef) => {
     const q = query(collection(db, collectionRef));
     const querySnapshot = await getDocs(q);
     return querySnapshot.size;
+}
+
+/**
+ * Obtenemos un elemento (doc)
+ * @param {String} collectionRef - Referencia a un colleción de firestore collection()
+ * @param {Object|String}  - Referencia al coc que se quiere localizar
+ */
+ export const seekItemPage = async (collectionRef,docRef) => {
+    return await getDoc(doc(collection(db, collectionRef), docRef));
 }

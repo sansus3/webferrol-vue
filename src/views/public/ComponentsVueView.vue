@@ -13,10 +13,14 @@
                                     target="_blank">
                                     Image viewer component for vue, supports rotation, scale, zoom and so on, based on viewer.js</a>
                                 <div class="content">
-                                    <RouterLink
-                                        :to="{name:'viewer'}">
-                                        Ver demo
-                                    </RouterLink>
+                                    <p class="label p-1">
+                                        Si quieres un ejemplo de funcionamiento ve a la demo de este mismo sitio web. En Github se te muestra este ejemplo junto a otros ejemplos más.
+                                        <RouterLink
+                                            class="button is-dark"
+                                            :to="{name:'viewer'}">
+                                            Ver demo
+                                        </RouterLink>
+                                    </p>
                                 </div>
                             </div>
                         </article>

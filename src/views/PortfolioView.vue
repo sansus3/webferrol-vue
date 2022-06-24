@@ -13,7 +13,8 @@
             <div v-if="store.portfolio.length" class="columns is-multiline">
                 <!-- Contenidos -->
                 <div class="column is-one-quarter" v-for="(item, index) in store.portfolio" :key="index">
-                    <img class="imgPortfolio" :src="item.url" alt="" @click="showModal({ ref: item.ref, url: item.url })">
+                    <img class="imgPortfolio" :src="item.url" alt=""
+                        @click="showModal({ ref: item.ref, url: item.url })">
                 </div>
                 <!-- Fin contenidos -->
             </div>
@@ -30,15 +31,43 @@
         <!-- use the modal component, pass in the prop -->
         <TheModal :show="show" @close="show = false">
             <template #header>
-                <div class="columns">
-                    <h3 class="column">Portafolio</h3>
-                    <div class="column has-text-right" v-if="storeUsers.isLogged">
-                        <button class="button is-small is-danger" @click="handleDelete">Eliminar</button>
+                    <div class="columns">
+                    <div class="column has-text-right">
+                        <button class="button is-rounded is-small is-default" @click="show = false">X</button>
                     </div>
                 </div>
             </template>
             <template #body>
-                <img style="width: 100%;height: 60vh;object-fit: contain;" :src="source" alt="">
+                <img style="width: 100%;height: 60vh;object-fit: contain;" :src="image.src" alt="">
+                <div v-if="storeUsers.isLogged">
+                    <div class="control m-1">
+                        <div class="tags has-addons">
+                        <span class="tag is-medium is-dark">Referencia</span>
+                        <span class="tag is-medium is-success">{{image.ref}}</span>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control is-expanded" :class="{'is-loading':iskeyDown}">
+                            <input
+                                @keydown="iskeyDown=true"
+                                @keyup="iskeyDown=false"
+                                v-model.trim="reference"
+                                class="input" type="text" placeholder="Escribe la referencia para eliminar">
+                        </p>
+                        <p class="control">
+                            <button
+                                @click="handleDelete"
+                                :disabled="!reference.length"
+                                class="button is-danger"
+                            >
+                                Eliminar
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <div></div>
             </template>
         </TheModal>
     </Teleport>
@@ -62,9 +91,10 @@ const storeUsers = useStoreUsers();
 
 const errores = ref({ error: false });
 const isLoading = ref(false);
+const iskeyDown = ref(false);
 const show = ref(false); //Booleano que abre o cierra una ventana modal
-const source = ref("");
-let item = null;
+const image = ref({src:'',ref:''});
+const reference = ref('');
 
 
 
@@ -83,21 +113,25 @@ try {
  */
 const showModal = ({ ref, url }) => {
     show.value = true;
-    source.value = url;
-    item = { ref, url }
+    image.value.src = url;
+    image.value.ref = ref;
 }
 
 const handleDelete = async () => {
     //console.log(item);
-    if (!item)
+    if (!image.value.ref.length)
         return;
     try {
         errores.value = { error: false };
         isLoading.value = true;
-        await store.deletePortfolio(item.ref);
+        if(image.value.ref!==reference.value)
+            throw new Error(`"${reference.value}" no coincide con "${image.value.ref}"`);
+        await store.deletePortfolio(image.value.ref);
         store.portfolio = [];
         await store.setPortfolio();
-        item = null;
+        image.value.src = '';
+        image.value.ref = '';
+        reference.value = '';
     } catch (error) {
         errores.value = {
             error: true,

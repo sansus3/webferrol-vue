@@ -50,7 +50,7 @@ const props = defineProps({
     vertical-align: middle;
 
     .modal-container {
-      width: 60vw;
+      width: 95vw;
       margin: 0px auto;
       padding: 20px 30px;
       background-color: #fff;

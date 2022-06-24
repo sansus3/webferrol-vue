@@ -1,18 +1,7 @@
 import { defineStore } from "pinia";
 import { getURL, listAllUrls,deleteFile } from '@/hooks/firebase.cloud.storage';
-import { initPage,nextPage,previousPage,totalPages } from "@/hooks/pagination.firestore";
-import { db } from "@/firebase";
-import {
-    collection,
-    getDocs,
-    doc,
-    getDoc,
-    query,
-    orderBy,
-    limit
-} from "firebase/firestore";
-
-import { useDB } from "@/hooks/firestore";
+import { initPage,nextPage,previousPage,totalPages,seekItemPage,limitPage } from "@/hooks/pagination.firestore";
+import { useDB,getDocsArray } from "@/hooks/firestore";
 
 export const useStoreProfile = defineStore({
     /**
@@ -26,7 +15,7 @@ export const useStoreProfile = defineStore({
          * @type {Array} workExperiences - 
          */
         workExperiences: [],
-        limit: 1, //Items por página
+        limit: 4, //Items por página
         total: 0,
         actualPage: 1, //contador 
         /**
@@ -53,15 +42,6 @@ export const useStoreProfile = defineStore({
         async setTotalExperiences(){
             this.total = await totalPages("workExperience");
         },
-        overwriteWorkExperiences(querySnapshot){
-            //Carga del Array
-            this.workExperiences = querySnapshot.docs.map(doc => {
-                return {
-                    ref: doc.id,
-                    ...doc.data()
-                }
-            });
-        },
         /**
          * Cargamos un array de objetos (documents) de la collection "workExperience" en la propiedad "workExperiences". Comienza aquí la sección de paginación
          * @link https://firebase.google.com/docs/firestore/query-data/get-data?hl=es&authuser=0
@@ -72,7 +52,7 @@ export const useStoreProfile = defineStore({
                 return;
             const querySnapshot = await initPage("workExperience","dateStart",this.limit);
             this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1]; 
-            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences
+            this.workExperiences =  getDocsArray(querySnapshot);
         },
         /**
          * Paginar la página posteriores de las experiencias laborales
@@ -82,23 +62,23 @@ export const useStoreProfile = defineStore({
                 return;
             //Actualizamos índice de la página
             this.actualPage++;
-            //Obtenemos el último documento del array                               
-            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[this.workExperiences.length-1].ref));
+            //Buscamos último documento del array                               
+            const lastWorkExperiences = await seekItemPage("workExperience", this.workExperiences[this.workExperiences.length-1].ref);
             //console.log(lastWorkExperiences)   
             // Construct a new query starting at this document
             const querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
-            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences   
+            this.workExperiences =  getDocsArray(querySnapshot);  
         },
         /**
          * Paginar la página previas de las experiencias laborales
          */
         async setPreviousExperiences() {
             this.actualPage--;
-            //console.log(this.lastWorkExperiences.id);
-            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), this.workExperiences[0].ref));           
+            //Obtenemos el primer elemento doc mostrado en la paginación
+            const lastWorkExperiences = await seekItemPage("workExperience", this.workExperiences[0].ref);;           
             // Construct a new query starting at this document
             const querySnapshot = await previousPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
-            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences 
+            this.workExperiences =  getDocsArray(querySnapshot);
         },
          /**
          * Paginar Una página concreta de las experiencias laborales
@@ -112,16 +92,17 @@ export const useStoreProfile = defineStore({
                 await this.setExperiences();
                 return;
             }
-            const q = query(collection(db, "workExperience"), orderBy("dateStart"), limit(newLimit));
-            let querySnapshot = await getDocs(q);
+           
+            let querySnapshot = await limitPage("workExperience","dateStart",newLimit);
             
             const last = querySnapshot.docs[index];
-            const lastWorkExperiences = await getDoc(doc(collection(db, "workExperience"), last.id));
+            const lastWorkExperiences = await seekItemPage("workExperience", last.id);
             //this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
             // Construct a new query starting at this document
             querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
             this.actualPage = page;
-            this.overwriteWorkExperiences(querySnapshot);//Cargamos la propiedad workExperiences    
+            //Cargamos el array a partir de una consulta querySnapshot
+            this.workExperiences =  getDocsArray(querySnapshot);   
         },
         /**
          * Cargamos un objeto de la collection "userProfile" y del document cuyo id es "userProfile"
@@ -131,9 +112,10 @@ export const useStoreProfile = defineStore({
             if (this.userProfile !== null)
                 return;
             const {getDocument} = useDB('userProfile');
-            const {data,ref} =  await getDocument('userProfile');
-            this.userProfile = {...data,ref};
-            //console.log(this.userProfile)  
+            //const {data,ref} =  await getDocument('userProfile');
+            //this.userProfile = {...data,ref};
+            const {data} =  await getDocument('userProfile');
+            this.userProfile = data;
         },
         /**
          * Para borrar un documento
