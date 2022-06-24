@@ -36,6 +36,17 @@ export const routes = [
 
     },
     {
+        path: '/workexperience/:ref',
+        name: 'Workexperience',
+        meta: {
+            title: 'Editar experiencia',
+            protectedRoute: true,
+        },
+        component: function () { 
+            return import('@/views/private/WorkExperienceEditView.vue')
+        }
+    },
+    {
         path: '/new-experience',
         name: 'newexperience',
         meta: {

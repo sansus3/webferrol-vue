@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { db } from "@/firebase";
 import {
     addDoc,
+    updateDoc,
     getDoc,
     doc,
     deleteDoc,
@@ -28,6 +29,25 @@ export const useDB = collectionName => {
                 id: Date.now(),
                 ...documentObject
             });
+        } catch (error) {
+            return {
+                error,
+                response: true,
+            }
+        } finally {
+            loading.value = false;
+        }
+
+    }
+    /**
+     * 
+     * @param {String}  id - Identificador para guardar el documento
+     * @param {Object} documentObject - Documento que se desea guardar
+     */
+    const updateDocument = async (id,documentObject) => {
+        try {
+            loading.value = true;
+            return await updateDoc(doc(db, collectionName,id),documentObject);
         } catch (error) {
             return {
                 error,
@@ -83,7 +103,7 @@ export const useDB = collectionName => {
             loading.value = false;
         }
     }
-    return {getDocument,addDocument,deleteDocument,loading}
+    return {getDocument,addDocument,deleteDocument,updateDocument,loading}
 }
 
 /**

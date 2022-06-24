@@ -3,81 +3,15 @@
     <h1 class="title has-text-centered">
       Crear experiencia
     </h1>
-    <form action="#" id="myForm" @submit.prevent="handleSubmit">
-      <ul>
-        <li class="field">
-          <label for="code" class="label">Control*</label>
-          <div class="control">
-            <input required v-model.trim="form.code" id="code" class="input"
-              :class="form.code.length ? 'is-success' : ''" type="text" placeholder="daw-123">
-          </div>
-        </li>
-        <li class="field">
-          <label for="title" class="label">Título*</label>
-          <div class="control">
-            <input required v-model.trim="form.title" id="title" class="input"
-              :class="form.title.length ? 'is-success' : ''" type="text"
-              placeholder="Diseñador de páginas WEB">
-          </div>
-        </li>
-        <li class="field">
-          <label for="jobTitle" class="label">Título profesional*</label>
-          <div class="control">
-            <input required v-model.trim="form.jobTitle" id="jobTitle" class="input"
-              :class="form.jobTitle.length ? 'is-success' : ''" type="text"
-              placeholder="Profesor, programador ...">
-          </div>
-        </li>
-        <li class="field">
-          <label for="place" class="label">Lugar*</label>
-          <div class="control">
-            <input required v-model.trim="form.place" id="place" class="input"
-              :class="form.place.length ? 'is-success' : ''" type="text" placeholder="Rue del Percebe 13">
-          </div>
-        </li>
-        <li class="field">
-          <label for="province" class="label">Provincia</label>
-          <div class="control">
-            <div class="select">
-              <input list="provinces" v-model.trim="form.province" id="province" class="input"
-                :class="form.province.length ? 'is-success' : ''" type="text" placeholder="Coruña">
-              <datalist id="provinces">
-                <option value="Coruña"></option>
-                <option value="Lugo"></option>
-                <option value="Ourense"></option>
-                <option value="Pontevedra"></option>
-              </datalist>
-            </div>
-          </div>
-        </li>
-        <li class="columns">
-          <div class="column field">
-            <label for="dateStart" class="label">Fecha de inicio</label>
-            <div class="control">
-              <input v-model="form.dateStart" id="dateStart" class="input" type="date">
-            </div>
-          </div>
-
-          <div class="column field">
-            <label for="dateEnd" class="label">Fecha de fin*</label>
-            <div class="control">
-              <input required v-model="form.dateEnd" id="dateEnd" class="input" type="date">
-            </div>
-          </div>
-        </li>
-      </ul>
-      <div class="has-text-centered">
-        <TheMessage :errorOutput="errorOutput"></TheMessage>
-        <button :disabled="disabled" class="button is-link" :class="spinner">Nueva experiencia</button>       
-      </div>
-    </form>
+    <FormWorkExperience @handleSubmit="handleSubmit"></FormWorkExperience>
   </div>
 </template>
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, provide } from 'vue';
 import { useStoreProfile } from '@/stores/profile';
 import { useRouter } from 'vue-router';
-import TheMessage from '../../components/TheMessage.vue';
+import FormWorkExperience from '@/components/forms/FormWorkExperience.vue';
+
 //Valores del formulario
 const form = reactive({
   code: '',
@@ -88,6 +22,20 @@ const form = reactive({
   dateStart: '',
   dateEnd: '',
 });
+provide('form',form);
+//Manipulación de errores
+const errorOutput = reactive({
+  error: false,
+  message: ''
+});
+provide('errorOutput',errorOutput);
+//Spinner
+const spinner = reactive({
+  'is-loading': false
+});
+provide('spinner',spinner);
+
+//Recarga del formulario para limpiarlo
 const reloadForm = () => {
   form.code = '',
   form.jobTitle = '',
@@ -97,17 +45,6 @@ const reloadForm = () => {
   form.dateStart = '',
   form.dateEnd = ''
 }
-const errorOutput = reactive({
-  error: false,
-  message: ''
-});
-const spinner = reactive({
-  'is-loading': false
-});
-const disabled = computed(() => !form.code.length || !form.jobTitle.length || !form.title.length || !form.place.length || !form.dateEnd.length);
-
-
-
 //Cargamos el store y router
 const store = useStoreProfile();
 const router = useRouter();
@@ -119,7 +56,9 @@ const handleSubmit = async () => {
   errorOutput.message = '';
   try {
     spinner['is-loading']=true;    
-    await store.insertWorkExperience({...form});
+    const response = await store.insertWorkExperience({...form});
+    if(response?.response)
+      throw new Error(response.error.message);
     store.workExperiences = []; //Para cuando entremos en el array recargue el contenido
     reloadForm();    
     router.push({name:'workexperiences'});
@@ -136,10 +75,5 @@ const handleSubmit = async () => {
   margin: 0 auto;
   width: 80vw;
   max-width: 900px;
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
 }
 </style>

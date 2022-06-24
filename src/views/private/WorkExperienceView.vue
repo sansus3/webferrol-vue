@@ -17,7 +17,15 @@
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">
                 <p class="panel-heading notification">
-                    {{ item.code }}
+                    <RouterLink
+                        :to="{ 
+                            name: 'Workexperience', 
+                            params: { 
+                                    ref: item.ref 
+                            }
+                        }">
+                        {{ item.code }}   
+                    </RouterLink>
                     <button @click="handleModal(item)" class="delete is-small"></button>
                 </p>
                 <div class="panel-block">
@@ -197,6 +205,10 @@ const handleDelete = async () => {
         loader['is-active'] = false;
         show.value = false;
     }
+}
+//Edición
+const handleEdit = code => {
+    alert(code)
 }
 </script>
 

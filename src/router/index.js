@@ -9,7 +9,7 @@ const router = createRouter({
 router.beforeEach((to,from,next)=>{
   window.document.title = to.meta.title?to.meta.title:'WebFerrol';
   const user = JSON.parse(window.localStorage.getItem("user"));
-  if(to.meta.protectedRoute===true && user?.uid===null){
+  if(to.meta.protectedRoute===true && user?.uid===undefined){
     next('/sign-in');
   }else{
     next();
