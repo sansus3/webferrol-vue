@@ -112,7 +112,7 @@ import ThePagination from '@/components/ThePagination.vue';
 import TheLoader from '@/components/TheLoader.vue';
 import TheModal from '@/components/TheModal.vue';
 //hook de funciones
-import { getDayMonthFullYear } from "@/hooks/getters";
+import { getDayMonthFullYear } from "@/hooks/general.functions";
 //Variables
 const loader = reactive({ 'is-active': false });
 const iskeyDown = ref(false);

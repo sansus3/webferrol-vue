@@ -11,7 +11,7 @@
 import { useRoute } from 'vue-router';
 import { reactive, provide } from 'vue';
 import { useDB } from '@/hooks/firestore';
-import { getFullYearMonthDay } from '@/hooks/getters';
+import { getFullYearMonthDay } from '@/hooks/general.functions';
 import FormWorkExperience from '@/components/forms/FormWorkExperience.vue';
 import { useStoreProfile } from '@/stores/profile';
 //Inicializamos Route

@@ -9,31 +9,27 @@
             <div class="notification is-link">
                 <a href="https://github.com/mirari/vue3-viewer">Enlace a Github</a>
             </div>
-           <!-- Gallery -->
-           <viewer :images="images" @inited="inited" class="viewer" ref="viewer">
-           <div class="columns is-multiline">
-                <div  v-for="(src,index) in images" :key="index" class="column is-one-quarter-desktop is-half-tablet">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-3by2">
-                            <img :src="src" :key="src">
-                            </figure>
-                            <div class="card-content is-overlay is-clipped">
-                            <span class="tag is-info">
-                                Foto {{index+1}}
-                            </span>       
+            <!-- Gallery -->
+            <viewer :images="images" @inited="inited" class="viewer" ref="viewer">
+                <div class="columns is-multiline">
+                    <div v-for="(src, index) in images" :key="index"
+                        class="column is-one-quarter-desktop is-half-tablet">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-3by2">
+                                    <img :src="src" :key="src">
+                                </figure>
                             </div>
+                            <footer class="card-footer">
+                                <a class="card-footer-item">
+                                    Texto de muestra {{ index + 1 }}
+                                </a>
+                            </footer>
                         </div>
-                        <footer class="card-footer">
-                            <a class="card-footer-item">
-                            Texto de muestra {{index+1}}
-                            </a>
-                        </footer>
                     </div>
                 </div>
-            </div>
             </viewer>
-           <!-- end Gallery -->
+            <!-- end Gallery -->
         </div>
         <div class="section has-text-centered"><button class="button" type="button" @click="show">Show</button></div>
     </div>
