@@ -43,7 +43,11 @@ export const listAllUrls = async (url = 'gs://curriculum-vitae-xurxo.appspot.com
     return Promise.all(
         
         items.map(
-            async (item) => ({ref: item._location.path_,url:await getDownloadURL(item)})
+            async (item) => ({
+                ref: item._location.path_,
+                url:await getDownloadURL(item),
+                //'data-source': 'https://www.google.es',
+            })
         )
     );
 }
