@@ -29,6 +29,7 @@ Autenticación de Firebase
             //console.log(email,password)
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             this.user = userCredential.user;
+            this.loadingSession = true;
         },
         /**
          * Método que nos permite cerrar sesión de un usuario. Ver autentificación en el enlace de abajo.
@@ -37,6 +38,7 @@ Autenticación de Firebase
         async loginOut() {
             await signOut(auth);
             this.user = null;
+            this.loadingSession = false;
         },
         /**
          * Método que nos permite recargar la propiedad "user" del state en caso de refrescar la página.
@@ -72,17 +74,10 @@ Autenticación de Firebase
     },
     getters: {
         /**
-         * Propiedad que retorna un String vacío si la propiedad "user" del state se encuentra vacía (no ha sesión abierta)
-         * @param {Object} state - La propiedad "state" de Pinia
-         * @returns {String|Object} - state.user - {uid,email,emailVerified,isAnonymous,providerData,stsTokenManager,createdAt,lastLoginAt,apiKey,appName}
-         */
-        getUser: (state) => state.user === null ? '' : state.user,
-        /**
          * 
          * @param {Object} state 
          * @returns {String} - Retorna el email si existe la propiedad o vacío
          */
         getUserEmail: (state) => state.user !== null && state.user.email ? state.user.email : '',
-        isLogged: (state) => state.user!==null && state.user.uid.length?true:false
     }
 });

@@ -11,7 +11,7 @@ const store = useStoreUsers();
 <template>
   <TheMenu></TheMenu> 
   <RouterView />
-  <TheFooter :email="store.getUser?.email"></TheFooter>
+  <TheFooter :email="store.getUserEmail"></TheFooter>
 </template>
 
 <style lang="scss">
