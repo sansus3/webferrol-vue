@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useStoreUsers } from '../stores/users';
 import { routes } from './routes';
 
 const router = createRouter({
@@ -6,11 +7,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to,from,next)=>{
+router.beforeEach(async (to,from,next)=>{
+  const store = useStoreUsers();
+  await store.onAuthState();
   window.document.title = to.meta.title?to.meta.title:'WebFerrol';
-  const user = JSON.parse(window.localStorage.getItem("user"));
-  if(to.meta.protectedRoute===true && user?.uid===undefined){
+  if(to.meta.protectedRoute===true && store.user?.uid===undefined){
     next('/sign-in');
+  }else if(to.meta.authRoute===true && store.user?.uid!==undefined){
+    next('/');
   }else{
     next();
   }

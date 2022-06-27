@@ -140,7 +140,6 @@ const handleDelete = async () => {
     } finally {
         isLoading.value = false;
         show.value = false;
-        source.value = '';
     }
 
 }

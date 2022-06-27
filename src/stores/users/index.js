@@ -29,7 +29,6 @@ Autenticación de Firebase
             //console.log(email,password)
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             this.user = userCredential.user;
-            window.localStorage.setItem("user",JSON.stringify(this.user));
         },
         /**
          * Método que nos permite cerrar sesión de un usuario. Ver autentificación en el enlace de abajo.
@@ -38,7 +37,6 @@ Autenticación de Firebase
         async loginOut() {
             await signOut(auth);
             this.user = null;
-            window.localStorage.removeItem("user");
         },
         /**
          * Método que nos permite recargar la propiedad "user" del state en caso de refrescar la página.
@@ -57,11 +55,12 @@ Autenticación de Firebase
                             //console.log("id",uid,"user",user)
                             // ...
                             this.user = user;
+                            this.loadingSession = true;
                             resolve(user)
                         } else {
                             // User is signed out
                             // ...
-                            window.localStorage.removeItem("user");
+                            this.loadingSession = false;
                             resolve(null);
                         }
                     },

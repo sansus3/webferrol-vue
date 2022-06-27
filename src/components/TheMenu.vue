@@ -1,6 +1,5 @@
 <template>
     <nav
-        v-if="!store.loadingSession"
         class="navbar" 
         :class="[store.isLogged ? 'is-dark' : 'is-info']"
         role="navigation" aria-label="main navigation">
