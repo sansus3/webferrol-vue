@@ -1,7 +1,7 @@
 <template>
     <nav
         class="navbar" 
-        :class="[store.loadingSession ? 'is-dark' : 'is-info']"
+        :class="[store.user ? 'is-dark' : 'is-info']"
         role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <RouterLink
@@ -39,7 +39,7 @@
                 </RouterLink>
                 
                 <div 
-                    v-if="store?.loadingSession" 
+                    v-if="store?.user" 
                     class="navbar-item has-dropdown"
                     :class="{ 'is-hoverable': isHoverable }"
                     >
@@ -105,7 +105,7 @@
                             <strong>Sign up</strong>
                         </a> -->
                         <TheLogout 
-                            v-if="store?.loadingSession"
+                            v-if="store?.user"
                             @click.prevent="isActive = false"></TheLogout>
                         <RouterLink
                             v-else

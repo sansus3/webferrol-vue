@@ -9,7 +9,7 @@ const router = createRouter({
 
 router.beforeEach(async (to,from,next)=>{
   const store = useStoreUsers();
-  await store.onAuthState();
+  //await store.onAuthState();
   window.document.title = to.meta.title?to.meta.title:'WebFerrol';
   if(to.meta.protectedRoute===true && store.user?.uid===undefined){
     next('/sign-in');

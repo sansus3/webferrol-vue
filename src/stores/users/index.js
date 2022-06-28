@@ -19,6 +19,13 @@ export const useStoreUsers = defineStore({
         loadingSession: false
     }),
     actions: {
+        setUser(user){
+            this.user={
+                email:user.email,
+                uid: user.uid
+            }
+            //console.log(this.user)
+        },
         /**
          * Método que nos permite autentificar un usuario en la api 
 Autenticación de Firebase
@@ -27,9 +34,8 @@ Autenticación de Firebase
          */
         async signIn({ email, password }) {
             //console.log(email,password)
-            const userCredential = await signInWithEmailAndPassword(auth, email, password)
-            this.user = userCredential.user;
-            this.loadingSession = true;
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            this.setUser(userCredential.user);
         },
         /**
          * Método que nos permite cerrar sesión de un usuario. Ver autentificación en el enlace de abajo.
@@ -38,7 +44,6 @@ Autenticación de Firebase
         async loginOut() {
             await signOut(auth);
             this.user = null;
-            this.loadingSession = false;
         },
         /**
          * Método que nos permite recargar la propiedad "user" del state en caso de refrescar la página.
@@ -56,8 +61,7 @@ Autenticación de Firebase
                             //const uid = user.uid;
                             //console.log("id",uid,"user",user)
                             // ...
-                            this.user = user;
-                            this.loadingSession = true;
+                            this.setUser(user);
                             resolve(user)
                         } else {
                             // User is signed out

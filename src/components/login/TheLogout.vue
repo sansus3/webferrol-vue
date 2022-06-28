@@ -2,7 +2,7 @@
     <a
         class="button is-light"
         href="#"
-        v-if="store.loadingSession" 
+        v-if="store.user" 
         @click.prevent="logOut">
     Cerrar sesión </a>
 

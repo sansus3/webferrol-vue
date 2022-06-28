@@ -11,11 +11,16 @@ import VueViewer from 'v-viewer'
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router)
+
 app.use(VueViewer)
 //La inicialización del store tiene que ir necesariamente después de la carga de Pinia (app.use(CreatePinia()))
 const store = useStoreUsers();
 (async ()=>{
-    await store.onAuthState();
+    try {
+        await store.onAuthState();
+    app.use(router)
     app.mount('#app');
+    } catch (error) {
+        console.log("main.js",error.message);
+    }    
 })()

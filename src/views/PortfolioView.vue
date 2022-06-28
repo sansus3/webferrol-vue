@@ -4,7 +4,7 @@
         <div class="home content is-medium p-5">
             <h1 class="title has-text-centered">Portafolio</h1>
             <TheMessage :errorOutput="errores"></TheMessage>
-            <div class="m-3" v-if="storeUsers.isLogged">
+            <div class="m-3" v-if="storeUsers.user">
                 <TheUploader @file-emit="fileEmit">
                     <div v-if="isLoading" class="loader is-loading"></div>
                     <span v-else>Cargar imagen ...</span>
@@ -39,7 +39,7 @@
             </template>
             <template #body>
                 <img style="width: 100%;height: 60vh;object-fit: contain;" :src="image.src" alt="">
-                <div v-if="storeUsers.isLogged">
+                <div v-if="storeUsers.user">
                     <div class="control m-1">
                         <div class="tags has-addons">
                         <span class="tag is-medium is-dark">Referencia</span>
