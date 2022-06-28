@@ -80,6 +80,12 @@
                             class="navbar-item" 
                             to="/about">
                             Sobre mí
+                        </RouterLink>
+                        <RouterLink 
+                            @click.prevent="navbarDropdownClose"
+                            class="navbar-item" 
+                            to="/sitemap">
+                            Mapa del sitio
                         </RouterLink> 
                         <!-- <a class="navbar-item">
                             Jobs

@@ -24,6 +24,14 @@ export const routes = [
         component: () => import('../views/PortfolioView.vue')
     },
     {
+        path: '/sitemap',
+        name: 'sitemap',
+        meta: {
+            title: 'Mapa del sitio',
+        },
+        component: () => import('../views/SiteMapView.vue')
+    },
+    {
         path: '/workexperiences',
         name: 'workexperiences',
         meta: {
