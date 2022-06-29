@@ -62,7 +62,7 @@ export const routes = [
             protectedRoute: true,
         },
         component: function () {
-            return import('@/views/backend/NewExperienceView.vue')
+            return import('@/views/private/WorkExperienceInsertView.vue')
         },
     },
     {

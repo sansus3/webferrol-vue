@@ -19,16 +19,16 @@ export const useDB = collectionName => {
     /**
      * 
      * @param {Object} documentObject Objeto con las columnas y valores a guardar como registro en un documento perteneciente a una determinada collección de firestore
-     * @returns {Object} El Objeto y un campo adicional llamado id, o un objeto Error
+     * @returns {Object} El Objeto con la referencia dada por firebase, la fecha de creación y campos creados y si no objet de error
      */
     const addDocument = async documentObject => {
         try {
             loading.value = true;
+            //Objeto a insertar en la base de datos
+            const data = {timeRef: Date.now(),...documentObject}
             // Add a new document with a generated id.
-            return await addDoc(collectionRef, {
-                id: Date.now(),
-                ...documentObject
-            });
+            const docRef = await addDoc(collectionRef, data);
+            return {ref:docRef.id,...data}
         } catch (error) {
             return {
                 error,

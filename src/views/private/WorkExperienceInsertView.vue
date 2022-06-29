@@ -3,11 +3,11 @@
     <h1 class="title has-text-centered">
       Crear experiencia
     </h1>
-    <FormWorkExperience @handleSubmit="handleSubmit"></FormWorkExperience>
+    <FormWorkExperience :alerts="alerts" :form="form" @handleSubmit="handleSubmit"></FormWorkExperience>
   </div>
 </template>
 <script setup>
-import { reactive, provide } from 'vue';
+import { reactive } from 'vue';
 import { useStoreProfile } from '@/stores/profile';
 import { useRouter } from 'vue-router';
 import FormWorkExperience from '@/components/forms/FormWorkExperience.vue';
@@ -22,18 +22,12 @@ const form = reactive({
   dateStart: '',
   dateEnd: '',
 });
-provide('form',form);
-//Manipulación de errores
-const errorOutput = reactive({
-  error: false,
-  message: ''
+
+//Alertas o mensajes enviados al formulario
+const alerts = reactive({
+    isLoading: false,//Mientras se realiza una transacción
+    error: false,//Mensajes de errores
 });
-provide('errorOutput',errorOutput);
-//Spinner
-const spinner = reactive({
-  'is-loading': false
-});
-provide('spinner',spinner);
 
 //Recarga del formulario para limpiarlo
 const reloadForm = () => {
@@ -51,22 +45,21 @@ const router = useRouter();
 
 
 const handleSubmit = async () => {
-  //Limpiamos los mensajes de error
-  errorOutput.error = false;
-  errorOutput.message = '';
   try {
-    spinner['is-loading']=true;    
+    alerts.isLoading = true;
+    alerts.error = false;  
     const response = await store.insertWorkExperience({...form});
     if(response?.response)
       throw new Error(response.error.message);
     store.workExperiences = []; //Para cuando entremos en el array recargue el contenido
+    store.total = 0;
+    store.actualPage = 1;
     reloadForm();    
     router.push({name:'workexperiences'});
   } catch (error) {
-    errorOutput.error = true;
-    errorOutput.message = error.message;
+    alerts.error = error.message;
   } finally {
-    spinner['is-loading']=false;
+    alerts.isLoading = false;
   }
 }
 </script>

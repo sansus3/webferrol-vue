@@ -50,7 +50,7 @@ export const useStoreProfile = defineStore({
         async setExperiences() {
             if (this.workExperiences.length)
                 return;
-            const querySnapshot = await initPage("workExperience","dateStart",this.limit);
+            const querySnapshot = await initPage("workExperience","dateEnd",this.limit);
             this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1]; 
             this.workExperiences =  getDocsArray(querySnapshot);
         },
@@ -66,7 +66,7 @@ export const useStoreProfile = defineStore({
             const lastWorkExperiences = await seekItemPage("workExperience", this.workExperiences[this.workExperiences.length-1].ref);
             //console.log(lastWorkExperiences)   
             // Construct a new query starting at this document
-            const querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
+            const querySnapshot = await nextPage("workExperience",'dateEnd',lastWorkExperiences,this.limit);
             this.workExperiences =  getDocsArray(querySnapshot);  
         },
         /**
@@ -77,7 +77,7 @@ export const useStoreProfile = defineStore({
             //Obtenemos el primer elemento doc mostrado en la paginación
             const lastWorkExperiences = await seekItemPage("workExperience", this.workExperiences[0].ref);;           
             // Construct a new query starting at this document
-            const querySnapshot = await previousPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
+            const querySnapshot = await previousPage("workExperience",'dateEnd',lastWorkExperiences,this.limit);
             this.workExperiences =  getDocsArray(querySnapshot);
         },
          /**
@@ -93,13 +93,13 @@ export const useStoreProfile = defineStore({
                 return;
             }
            
-            let querySnapshot = await limitPage("workExperience","dateStart",newLimit);
+            let querySnapshot = await limitPage("workExperience","dateEnd",newLimit);
             
             const last = querySnapshot.docs[index];
             const lastWorkExperiences = await seekItemPage("workExperience", last.id);
             //this.lastWorkExperiences = querySnapshot.docs[querySnapshot.docs.length-1];
             // Construct a new query starting at this document
-            querySnapshot = await nextPage("workExperience",'dateStart',lastWorkExperiences,this.limit);
+            querySnapshot = await nextPage("workExperience",'dateEnd',lastWorkExperiences,this.limit);
             this.actualPage = page;
             //Cargamos el array a partir de una consulta querySnapshot
             this.workExperiences =  getDocsArray(querySnapshot);   
@@ -132,7 +132,8 @@ export const useStoreProfile = defineStore({
         },
         /**
          * Función en la que añadimos una nueva experiencia de usuario
-         * @param {Object} payment - {code,title,place,province,dateStart,dateEnd}
+         * @param {Object} payment - {code,title,place,province,dateEnd,dateStart}
+         * @return {Object} Example: {ref: 'cMnPHAndMvAZhNgIckQ1', timeRef: 1656537319375, code: 'control', jobTitle: 'titulo profesional', title: 'Título', province: 'A Coruña', dateEnd: '', dateStart: ''}. El campo ref es el dato por firestore con la función addDoc
          */
         async insertWorkExperience(payment) {
             // Add a new document in collection "workExperience"
@@ -144,7 +145,6 @@ export const useStoreProfile = defineStore({
             }
             const {addDocument} = useDB('workExperience');
             return await addDocument(payment);
-            //console.log("Document written with ID: ", docRef.id);
         }
     },
     getters: {
@@ -184,6 +184,10 @@ export const useStoreProfile = defineStore({
          * @param {Object} state 
          * @returns {String} Retorna la url una imagen del Cloud Storage
          */
-        getPhotoURL: async state => await getURL(state.userProfile !== null && state.userProfile.folder && state.userProfile.photo ? `${state.userProfile.folder}/${state.userProfile.photo}` : '')
+        async getPhotoURL(state){
+            if(state.userProfile !== null && state.userProfile.folder && state.userProfile.photo)
+             return await getURL(`${state.userProfile.folder}/${state.userProfile.photo}`);
+            return "";
+        }
     }
 });

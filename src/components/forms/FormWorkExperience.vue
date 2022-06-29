@@ -63,29 +63,43 @@
             </li>
         </ul>
         <div class="has-text-centered">
-            <TheMessage :errorOutput="errorOutput"></TheMessage>
-            <button :disabled="disabled" class="button is-link" :class="spinner">{{button}}</button>
+            <article class="message m-3 is-danger" v-if="alerts.error">
+                <div class="message-header">
+                    <p>Error</p>
+                </div>
+                <div class="message-body">
+                    {{ alerts.error }}
+                </div>
+            </article>  
+            <button :disabled="disabled" class="button is-link" :class="{'is-loading':alerts.isLoading}">{{button}}</button>
         </div>
     </form>
 </template>
 
 <script setup>
-import { inject,computed } from 'vue';
-import TheMessage from '@/components/TheMessage.vue';
-defineProps({
+import { computed } from 'vue';
+const props = defineProps({
     button:{
         type:String,
         default: 'Nueva experiencia'
+    },
+    form:{
+        type: Object
+    },
+    alerts:{
+        type: Object,
+        default: () => ({
+            isLoading: false,
+            error: false,
+        })
     }
 });
-const form = inject('form');
-const errorOutput = inject('errorOutput');
-const spinner = inject('spinner');
+
 
 const emits = defineEmits(['handleSubmit']);
 
 
-const disabled = computed(() => !form.code.length || !form.jobTitle.length || !form.title.length || !form.place.length || !form.dateEnd.length);
+const disabled = computed(() => !props.form.code.length || !props.form.jobTitle.length || !props.form.title.length || !props.form.place.length || !props.form.dateEnd.length);
 
 const handleSubmit = async () => {
    emits('handleSubmit');

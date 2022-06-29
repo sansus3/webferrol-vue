@@ -3,13 +3,16 @@
         <h1 class="title has-text-centered">
             Editar experiencia
         </h1>
-        <FormWorkExperience @handleSubmit="handleSubmit" button="Actualizar Experiencia"></FormWorkExperience>
+        <FormWorkExperience 
+        :form="form"
+        :alerts="alerts"
+        @handleSubmit="handleSubmit" button="Actualizar Experiencia"></FormWorkExperience>
     </div>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router';
-import { reactive, provide } from 'vue';
+import { reactive } from 'vue';
 import { useDB } from '@/hooks/firestore';
 import { getFullYearMonthDay } from '@/hooks/general.functions';
 import FormWorkExperience from '@/components/forms/FormWorkExperience.vue';
@@ -30,24 +33,14 @@ const form = reactive({
     dateStart: '',
     dateEnd: '',
 });
-provide('form', form);
-//Manipulación de errores
-const errorOutput = reactive({
-    error: false,
-    message: ''
+//Alertas o mensajes enviados al formulario
+const alerts = reactive({
+    isLoading: false,//Mientras se realiza una transacción
+    error: false,//Mensajes de errores
 });
-provide('errorOutput', errorOutput);
-//Spinner
-const spinner = reactive({
-    'is-loading': false
-});
-provide('spinner', spinner);
-
-
-
-
 getDocument(route.params.ref).then(
     response => {
+         alerts.error = false;       
         //console.log(response);
         if(response?.response)
             throw new Error(response.error.message);
@@ -58,16 +51,15 @@ getDocument(route.params.ref).then(
         form.province = response.data.province;
         form.dateStart = getFullYearMonthDay(response.data.dateStart,"-");
         form.dateEnd = getFullYearMonthDay(response.data.dateEnd,"-");
-    }
-).catch(error=>{
-    errorOutput.error = true;
-    errorOutput.message = error.message;
-});
+    }).catch(error=>{
+        alerts.error = error.message;
+    });
 
 //Actualización
 const handleSubmit = async () => {
     try {
-        spinner['is-loading']=true;
+        alerts.isLoading=true;
+         alerts.error = false;
         const data = dateConfiguration(); 
         const response = await updateDocument(route.params.ref,data);
         if(response?.response)
@@ -77,10 +69,9 @@ const handleSubmit = async () => {
         store.total = 0;
         store.actualPage = 1;
     } catch (error) {
-        errorOutput.error = true;
-        errorOutput.message = error.message;
+        alerts.error = error.message;
     }  finally {
-         spinner['is-loading']=false;  
+         alerts.isLoading=false;  
     }  
 }
 
