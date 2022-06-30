@@ -55,7 +55,7 @@ const handleSubmit = async () => {
     store.total = 0;
     store.actualPage = 1;
     reloadForm();    
-    router.push({name:'workexperiences'});
+    router.push({name:'Workexperience',params:{ref:response.ref}});
   } catch (error) {
     alerts.error = error.message;
   } finally {

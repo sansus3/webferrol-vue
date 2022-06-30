@@ -87,3 +87,10 @@ const dateConfiguration = () => {
 }
 
 </script>
+<style scoped>
+.work-experience {
+  margin: 0 auto;
+  width: 80vw;
+  max-width: 900px;
+}
+</style>
