@@ -100,8 +100,8 @@ export const useDB = collectionName => {
  */
 export const getDocsArray = querySnapshot => 
 querySnapshot.docs.map(doc => {
-    return {
+    return reactive({
         ref: doc.id,
         ...doc.data()
-    }
+    })
 });
