@@ -29,6 +29,7 @@ const form = reactive({
     jobTitle: '',
     title: '',
     place: '',
+    timeRef:'',//Este campo no se encuentra en la inserción de datos es donde se crea
     province: 'Coruña',
     dateStart: '',
     dateEnd: '',
@@ -45,6 +46,7 @@ getDocument(route.params.ref).then(
         if(response?.response)
             throw new Error(response.error.message);
         form.code = response.data.code;
+        form.timeRef = response.data?.timeRef??Date.now();
         form.jobTitle = response.data.jobTitle;
         form.title = response.data.title;
         form.place = response.data.place;

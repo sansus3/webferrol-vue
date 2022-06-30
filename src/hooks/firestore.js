@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { reactive } from "vue";
 import { db } from "@/firebase";
 import {
     addDoc,
@@ -15,7 +15,6 @@ import {
  */
 export const useDB = collectionName => {
     const collectionRef = collection(db, collectionName);
-    const loading = ref(false);
     /**
      * 
      * @param {Object} documentObject Objeto con las columnas y valores a guardar como registro en un documento perteneciente a una determinada collección de firestore
@@ -23,21 +22,17 @@ export const useDB = collectionName => {
      */
     const addDocument = async documentObject => {
         try {
-            loading.value = true;
             //Objeto a insertar en la base de datos
             const data = {timeRef: Date.now(),...documentObject}
             // Add a new document with a generated id.
             const docRef = await addDoc(collectionRef, data);
-            return {ref:docRef.id,...data}
+            return reactive({ref:docRef.id,...data});
         } catch (error) {
             return {
                 error,
                 response: true,
             }
-        } finally {
-            loading.value = false;
-        }
-
+        } 
     }
     /**
      * 
@@ -46,17 +41,15 @@ export const useDB = collectionName => {
      */
     const updateDocument = async (id,documentObject) => {
         try {
-            loading.value = true;
-            return await updateDoc(doc(db, collectionName,id),documentObject);
+            const data = {timeRef: Date.now(),...documentObject}
+            const docRef = await updateDoc(doc(db, collectionName,id),data);
+            return reactive({ref:id,...data});
         } catch (error) {
             return {
                 error,
                 response: true,
             }
-        } finally {
-            loading.value = false;
         }
-
     }
     /**
      * 
@@ -65,16 +58,13 @@ export const useDB = collectionName => {
      */
     const deleteDocument = async reference => {
         try {
-            loading.value = true;
             return await deleteDoc(doc(db, collectionName, reference));
         } catch (error) {
             return {
                 error,
                 response: true,
             }
-        } finally {
-            loading.value = false;
-        }
+        } 
     }
     /**
      * 
@@ -83,15 +73,14 @@ export const useDB = collectionName => {
      */
     const getDocument = async reference => {
         try {
-            loading.value = true;
             const docRef = doc(db, collectionName, reference);
             onSnapshot(docRef);//Podemos utilizar el ahora conocido onSnapShot() para recibir el stream de datos actualizado. 
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                return {
+                return reactive({
                     ref: docSnap.id,
                     data: {...docSnap.data()},
-                }
+                })
             } else 
                 throw new Error(`No existe el documento ${reference}`);
         } catch (error) {
@@ -99,11 +88,9 @@ export const useDB = collectionName => {
                 error,
                 response: true,
             }
-        } finally {
-            loading.value = false;
         }
     }
-    return {getDocument,addDocument,deleteDocument,updateDocument,loading}
+    return {getDocument,addDocument,deleteDocument,updateDocument}
 }
 
 /**
@@ -118,4 +105,3 @@ querySnapshot.docs.map(doc => {
         ...doc.data()
     }
 });
-
