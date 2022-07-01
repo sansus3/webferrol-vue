@@ -21,7 +21,7 @@ import { useStoreProfile } from '@/stores/profile';
 //Inicializamos Route
 const route = useRoute();
 const store = useStoreProfile();
-//Obtención de los datos
+//Obtención de los datos y función de actualización. Aquí no utilizamos el store de Pinia
 const { getDocument,updateDocument } = useDB('workExperience');
 
 //Valores del formulario
@@ -30,7 +30,7 @@ const form = reactive({
     jobTitle: '',
     title: '',
     place: '',
-    timeRef:'',//Este campo no se encuentra en la inserción de datos es donde se crea
+    timeRef:'',//No se encuentra en el formulario. Se creó al insertar una nueva experiencia laboral
     province: 'Coruña',
     dateStart: '',
     dateEnd: '',
@@ -40,6 +40,7 @@ const alerts = reactive({
     isLoading: false,//Mientras se realiza una transacción
     error: false,//Mensajes de errores
 });
+//Obtenión del documento y carga del formulario
 getDocument(route.params.ref).then(
     response => {
          alerts.error = false;       
@@ -65,7 +66,7 @@ const handleSubmit = async () => {
          alerts.error = false;
         const data = dateConfiguration(); 
         const response = await updateDocument(route.params.ref,data);
-        if(response?.response)
+        if(response?.response)//Si hay error se lo añadimos al catch
             throw new Error(response.error.message);
         //Reiniciamos paginación
         store.workExperiences = [];
@@ -77,7 +78,7 @@ const handleSubmit = async () => {
          alerts.isLoading=false;  
     }  
 }
-
+//Función para dar el formato correcto en la actualización a la base de datos de firestore
 const dateConfiguration = () => {
     const data = {...form};
     const from = data.dateEnd.split('-');
@@ -88,7 +89,6 @@ const dateConfiguration = () => {
     }
     return data;
 }
-
 </script>
 <style scoped>
 .work-experience {
