@@ -2,17 +2,17 @@
     <div class="section work-experience columns is-multiline">
         <!-- The Loader -->
         <TheLoader :is-active="loader"></TheLoader>
+        <!-- Errores -->
+        <div v-if="errorOutput.error" class="column is-full has-text-centered notification is-danger">
+            {{ errorOutput.message }}
+        </div>
         <!--Pagination-->
         <div class="column is-full">
             <ThePagination @handleNext="onNextClick" @handlePrevious="onPreviousClick"
                 @handlePaginationLink="onPaginationLink" :perPage="store.limit" :actualPage="store.actualPage"
                 :total="store.total"></ThePagination>
 
-        </div>
-
-        <div v-if="errorOutput.error" class="column title has-text-centered notification is-danger">
-            {{ errorOutput.message }}
-        </div>
+        </div>        
         <div class="column is-one-quarter" v-for="(item, key) in store.workExperiences" :key="key">
             <article class="panel has-background-white"
                 :class="{ 'is-success': key % 2 == 0, 'is-info': key % 2 != 0 }">

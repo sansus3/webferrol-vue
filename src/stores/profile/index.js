@@ -123,7 +123,9 @@ export const useStoreProfile = defineStore({
          */
         async deleteWorkExperience(ref){
             const {deleteDocument} = useDB('workExperience');
-            await deleteDocument(ref);
+            const response = await deleteDocument(ref);
+            if(response.response)
+                throw new Error(response.error);
             this.workExperiences = this.workExperiences.filter((item) => item.ref !== ref);
             this.workExperiences = [];            
             await this.setTotalExperiences();

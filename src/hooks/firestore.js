@@ -28,10 +28,10 @@ export const useDB = collectionName => {
             const docRef = await addDoc(collectionRef, data);
             return reactive({ref:docRef.id,...data});
         } catch (error) {
-            return {
+            return reactive({
                 error,
                 response: true,
-            }
+            })
         } 
     }
     /**
@@ -45,25 +45,28 @@ export const useDB = collectionName => {
             const docRef = await updateDoc(doc(db, collectionName,id),data);
             return reactive({ref:id,...data});
         } catch (error) {
-            return {
+            return reactive({
                 error,
                 response: true,
-            }
+            })
         }
     }
     /**
      * 
      * @param {String} reference Referencia de un documento a eliminar
-     * @returns {Object} El objeto eliminado o Error
+     * @returns {Object} El objeto con la referencia del objeto eliminado o Error
      */
     const deleteDocument = async reference => {
         try {
-            return await deleteDoc(doc(db, collectionName, reference));
+            deleteDoc(doc(db, collectionName, reference));
+            return reactive({
+                ref: reference
+            });
         } catch (error) {
-            return {
+            return reactive({
                 error,
                 response: true,
-            }
+            })
         } 
     }
     /**
@@ -84,10 +87,10 @@ export const useDB = collectionName => {
             } else 
                 throw new Error(`No existe el documento ${reference}`);
         } catch (error) {
-            return {
+            return reactive({
                 error,
                 response: true,
-            }
+            })
         }
     }
     return {getDocument,addDocument,deleteDocument,updateDocument}
