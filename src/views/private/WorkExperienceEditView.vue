@@ -6,7 +6,8 @@
         <FormWorkExperience 
         :form="form"
         :alerts="alerts"
-        @handleSubmit="handleSubmit" button="Actualizar Experiencia"></FormWorkExperience>
+        :btnDisabled = "!form.code?.length"
+        @handleSubmit="handleSubmit" btn-text="Actualizar Experiencia"></FormWorkExperience>
     </div>
 </template>
 

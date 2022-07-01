@@ -71,7 +71,7 @@
                     {{ alerts.error }}
                 </div>
             </article>  
-            <button :disabled="disabled" class="button is-link" :class="{'is-loading':alerts.isLoading}">{{button}}</button>
+            <button :disabled="disabled" class="button is-link" :class="{'is-loading':alerts.isLoading}">{{btnText}}</button>
         </div>
     </form>
 </template>
@@ -79,13 +79,26 @@
 <script setup>
 import { computed } from 'vue';
 const props = defineProps({
-    button:{
+    btnText:{
         type:String,
         default: 'Nueva experiencia'
     },
+    /**
+     * @type {Boolean} Además de controlar internamente cuando se activa el botón, también podemos añadir otra medida de control desde el componente padre. Por ejemplo si editamos el formulario hasta que se carguen todos los datos.
+     */
+    btnDisabled:{
+        type: Boolean,
+        default: false,
+    },
+    /**
+     * Todos los datos. Ver los v-model de los campos para ver las propiedades
+     */
     form:{
         type: Object
     },
+    /**
+     * Mensajes de alertas. Para el spinner y los mensajes de error a mostrar
+     */
     alerts:{
         type: Object,
         default: () => ({
@@ -99,7 +112,7 @@ const props = defineProps({
 const emits = defineEmits(['handleSubmit']);
 
 
-const disabled = computed(() => !props.form.code.length || !props.form.jobTitle.length || !props.form.title.length || !props.form.place.length || !props.form.dateEnd.length);
+const disabled = computed(() => props.btnDisabled || !props.form.code.length || !props.form.jobTitle.length || !props.form.title.length || !props.form.place.length || !props.form.dateEnd.length);
 
 const handleSubmit = async () => {
    emits('handleSubmit');
