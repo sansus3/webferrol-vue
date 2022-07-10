@@ -87,5 +87,16 @@ export const routes = [
         // this generates a separate chunk (About.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import('../views/demos/ViewerView.vue'),
-    }
+    },
+    {
+        path: '/geolocation',
+        name: 'Geolocation',
+        meta: {
+            title: 'Geolocation JavaScript',
+        },
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/demos/GeolocationView.vue'),
+    },
 ]
